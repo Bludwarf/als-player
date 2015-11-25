@@ -134,7 +134,8 @@ for (var i = 0; i < songs.length; ++i) {
                 beatTime: sectionLive.beatTime,
                 color: sectionLive.colorIndex,
                 name: sectionLive.name,
-                song: song
+                song: song,
+                style: sectionLive.style
             };
 
             // measures

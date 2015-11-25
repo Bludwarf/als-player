@@ -73,6 +73,20 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 						audio.currentTime = section.secTime;
 						audio.play();
 					});
+				};
+
+				// Measures
+				for (var m = 0; m < section.measures.length; ++m) {
+					var measure = section.measures[m];
+
+					measure.play = function() {
+						var measure = this;
+						$("#audio").each(function() {
+							var audio = this;
+							audio.currentTime = measure.secTime;
+							audio.play();
+						});
+					}
 				}
 			}
 		}
@@ -110,6 +124,21 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 				});
 				//console.log(that.currentTime + "...");
 				that.dispatchEvent(event);
+			}
+
+			if (section) {
+				var measure = section.measureAt({secTime: that.currentTime});
+				if ($scope.currentMeasure != measure) {
+					$scope.currentMeasure = measure;
+
+					// TODO : on active la mesure avec Angular
+
+					var event = new CustomEvent('measure', {
+						detail: measure
+					});
+					//console.log(measure.index);
+					that.dispatchEvent(event);
+				}
 			}
 
 			$scope.$apply(); // sinon la variable currentSection n'est pas rafraichie dans l'IHM
