@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <link href="../public/ableton-live.css" rel="stylesheet" type="text/html"/>
+    <title>Palette Ableton Live 8</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+    <script>
+        var app = angular.module('app', [
+
+        ]);
+
+        /**
+         * Created by MLAVIGNE on 13/11/2015.
+         */
+        app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
+            var song = {
+                structure: {
+                    sections: []
+                }
+            };
+            var n = 60;
+            var width = (1/n*100) + '%';
+            for (var i = 0; i < n; ++i) {
+                song.structure.sections.push({
+                    name: '#'+i+'Color',
+                    color: i,
+                    style: {
+                        left: (i/n*100)+'%',
+                        width: width
+                    }
+                });
+            }
+            $scope.song = song;
+        }]);
+    </script>
+</head>
+<body ng-controller="ctrl">
+<div>
+    <div class="Track">
+        <div class="Track">
+            <div class="AudioClips">
+
+                <div ng-repeat="section in song.structure.sections" id="Section-{{section.index}}" class="AudioClip AudioClip-48" ng-style="section.style">
+                    <div class="Header">
+                        <div class="Name" ng-class="['Color-'+section.color]">
+                            {{section.name}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -8,12 +8,12 @@ body {
 .Color-3 { background-color: #85970c }
 .Color-4 { background-color: #51a028 }
 .Color-5 { background-color: #009c8e }
-.Color-6 { background-color: #0079bf }
-.Color-7 { background-color: #00f }
-.Color-8 { background-color: #2950a4 }
-.Color-9 { background-color: #6149af }
-.Color-10{ background-color: #7b7c80 }
-.Color-11{ background-color: #393b40 }
+.Color-6 { background-color: #0079bf ; color: #C7EAFF}
+.Color-7 { background-color: #00f    ; color: #D8D8FF }
+.Color-8 { background-color: #2950a4 ; color: #BDD2FF }
+.Color-9 { background-color: #6149af ; color: #E2D9FF }
+.Color-10{ background-color: #7b7c80 ; color: #BDC8D4 }
+.Color-11{ background-color: #393b40 ; color: #BDC8D4 }
 .Color-12{ background-color: #ff0300 }
 .Color-13{ background-color: #c0bb64 }
 .Color-14{ background-color: #a7bf00 }
@@ -35,31 +35,33 @@ body {
 .Color-30{ background-color: #00e9ff }
 .Color-31{ background-color: #87c4ff }
 .Color-32{ background-color: #8fa5ff }
-.Color-33{ background-color: #c979f4 }
-.Color-34{ background-color: #ff32d6 }
-.Color-35{ background-color: #ffa609 }
-.Color-36{ background-color: #fff107 }
-.Color-37{ background-color: #e4f500 }
-.Color-38{ background-color: #ddc400 }
-.Color-39{ background-color: #c09e5f }
-.Color-40{ background-color: #88b57b }
-.Color-41{ background-color: #85c2ba }
-.Color-42{ background-color: #9ab3c5 }
-.Color-43{ background-color: #83a5c3 }
-.Color-44{ background-color: #c88b7b }
-.Color-45{ background-color: #f43e7f }
-.Color-46{ background-color: #ff94a5 }
-.Color-47{ background-color: #ffa370 }
-.Color-48{ background-color: #ffef9b }
-.Color-49{ background-color: #d2e594 }
-.Color-50{ background-color: #bad16f }
-.Color-51{ background-color: #a9aaac }
-.Color-52{ background-color: #d3fde0 }
-.Color-53{ background-color: #cbf1f9 }
-.Color-54{ background-color: #c3bde4 }
-.Color-55{ background-color: #d0d0d1 }
-.Color-56{ background-color: #dfe6e5 }
-.Color-57{ background-color: #fff }
+.Color-33{ background-color: #c979f4 } /* = Color-34 */
+.Color-34{ background-color: #c979f4 } /* = Color-33 */
+.Color-35{ background-color: #ff32d6 }
+.Color-36{ background-color: #ffa609 }
+.Color-37{ background-color: #fff107 }
+.Color-38{ background-color: #e4f500 }
+.Color-39{ background-color: #ddc400 }
+.Color-40{ background-color: #c09e5f }
+.Color-41{ background-color: #88b57b }
+.Color-42{ background-color: #85c2ba }
+.Color-43{ background-color: #9ab3c5 }
+.Color-44{ background-color: #83a5c3 }
+.Color-45{ background-color: #c88b7b }
+.Color-46{ background-color: #f43e7f }
+.Color-47{ background-color: #ff94a5 }
+.Color-48{ background-color: #ffa370 }
+.Color-49{ background-color: #ffef9b }
+.Color-50{ background-color: #d2e594 }
+.Color-51{ background-color: #bad16f }
+.Color-52{ background-color: #a9aaac }
+.Color-53{ background-color: #d3fde0 }
+.Color-54{ background-color: #cbf1f9 }
+.Color-55{ background-color: #c3bde4 } /* = Color-56 */
+.Color-56{ background-color: #c3bde4 } /* = Color-55 */
+.Color-57{ background-color: #d0d0d1 }
+.Color-58{ background-color: #dfe6e5 }
+.Color-59{ background-color: #fff }
 
 .Track{
 	background-color: #bdc8d4;
@@ -75,6 +77,7 @@ body {
 .AudioClip {
 	position: absolute;
 	height: 100%;
+	color: #0a0d1f;
 }
 
 .AudioClip .Header {
@@ -87,7 +90,6 @@ body {
 .AudioClip .Header .Name {
 	pointer-events: none;
 	border: solid 1px #0a0d1f;
-	color: #0a0d1f;
 	font-size: 12px;
 	overflow: hidden;
 	font-weight: bold;
