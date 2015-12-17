@@ -1,0 +1,67 @@
+<!-- Voir le VexTab (*.vex) ici : http://www.vexflow.com/vextab/playground/?foo -->
+										<Notes>
+											<KeyTracks>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="0" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="1.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="3" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="5.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="8" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="9.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="11" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="13.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="50" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="2" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="10" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="14" Duration="0.5" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="15" Duration="1" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="53" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="2.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="10.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="55" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="7.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="57" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="6" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="6.5" Duration="0.75" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="59" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="1" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="3.5" Duration="0.75" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="9" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="11.5" Duration="0.75" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="13" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="60" />
+												</KeyTrack>
+												<KeyTrack>
+													<Notes>
+														<MidiNoteEvent Time="0.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="4.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="8.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+														<MidiNoteEvent Time="12.5" Duration="0.25" Velocity="100" OffVelocity="64" IsEnabled="true" />
+													</Notes>
+													<MidiKey Value="62" />
+												</KeyTrack>
+											</KeyTracks>
+										</Notes>

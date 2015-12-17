@@ -1,0 +1,7 @@
+tabstave notation=true key=Am time=4/4
+clef=bass strings=4 tuning=G/3,D/3,A/2,D/2
+notes :8 0/4 5-3/3 0-3-5-0/4 3/3 | T3/3 :8 5-3/3 0/4 2-2-2/3 0/3 |
+
+tabstave notation=true key=Am time=4/4
+clef=bass strings=4 tuning=G/3,D/3,A/2,D/2
+notes :8 0/4 5-3/3 0-3-5-0/4 3/3 | T3/3 :8 5-3/3 0/4 3/4 ## :q 3/4 |
