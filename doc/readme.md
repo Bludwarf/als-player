@@ -14,6 +14,19 @@ Intégration des fichiers JSON
 Installation
 ============
 
+TypeScript
+----------
+
+Télécharger les librairies 
+
+    npm install -g typescript
+    
+Aller dans TypeScript "Language" du menu Webstorm et ajouter le dossier lib installé. Par exemple ```C:\Users\mlavigne\AppData\Roaming\npm\node_modules\typescript\lib```.
+
+Ajouter les options pour la compilation
+
+    --target es5
+
 Midi
 ----
 

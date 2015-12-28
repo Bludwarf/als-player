@@ -3,11 +3,13 @@
  *
  * @require underscore.js
  */
-var navigator_isMac = navigator.userAgent.toLowerCase().indexOf('macintosh') != -1;
-/*var als = {};
-window.als = als;*/
+//<reference path='../types/node/node.d.ts'/>
+///<reference path='../types/underscore/underscore.d.ts'/>
+var navigator_isMac = this['navigator'] && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('macintosh') != -1;
+var als = {};
+/*window.als = als;*/
 var RELATIVE_PATH_ROOT = '/Users/bludwarf/Dropbox/Musiques/Funk Pierre/Sets Live';
-var pathMatcher = {};
+var pathMatcher = null;
 /**
  *
  * @param pathMatcher {PathMatcher}
@@ -48,14 +50,14 @@ function secTime(element) {
  * @returns {*} l'élément qui commence avant (ou pile) le beatTime/secTime indiqué
  */
 function elementAt(elements, filter) {
-    var prop = _.keys(filter)[0];
-    var value = filter[prop];
+    var name = _.keys(filter)[0];
+    var value = filter[name];
     var first = elements[0];
-    if (value < prop(first, prop))
+    if (value < prop(first, name))
         return null;
     for (var i = elements.length - 1; i >= 0; --i) {
         var element = elements[i];
-        if (value >= prop(element, prop)) {
+        if (value >= prop(element, name)) {
             return element;
         }
     }
@@ -112,9 +114,9 @@ var LiveSet = (function () {
         enumerable: true,
         configurable: true
     });
-    LiveSet.prototype.warpMarkerAt = function (beatTime) {
-        return elementAt(warpMarkers, beatTime); // TODO : défini en dur dans un .js
-    };
+    /*warpMarkerAt(beatTime) {
+     return elementAt(warpMarkers, beatTime); // TODO : défini en dur dans un .js
+     }*/
     LiveSet.prototype.measureAt = function (query) {
         var section = (typeof query.beatTime != 'undefined') ? this.sectionAt(query.beatTime) : this.sectionAtSecTime(query.secTime);
         return section.measureAt(query);
@@ -215,7 +217,7 @@ var LiveSet = (function () {
                 var pathElements = fileRef.SearchHint[0].PathHint[0].RelativePathElement;
                 if (pathElements) {
                     dirs = _.map(pathElements, function (pathElement) {
-                        return pathElement.$.Dir;
+                        return pathElement['$'].Dir;
                     });
                 }
                 else {
