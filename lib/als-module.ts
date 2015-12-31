@@ -516,24 +516,28 @@ module als {
          * @param cb  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array.
          * @param thisArg  An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
          */
-        forEach(cb: (value: WarpMarker, index: number, array: WarpMarker[]) => void, thisArg?: any): void {
+        /*forEach(cb: (value: WarpMarker, index: number, array: WarpMarker[]) => void, thisArg?: any): void {
             // On ne prend pas le dernier qui représente la fin de l'AudioClip
             this.slice(0, this.length - 2).forEach(cb, thisArg);
-        }
+        }*/
 
+        /**
+         * Tempo moyen (pondéré)
+         * @returns {number}
+         */
         get tempo() {
             var tempoMoyen = 0;
-            var durationBeatTime = 0;
+            var beatDuration = 0;
             for (var i = 1; i+1 < this.length; ++i) {
                 var m = this[i];
 
                 // Tempo moyen (pondéré par le BeatTime)
-                tempoMoyen       += m.tempo * m.durationBeatTime;
-                durationBeatTime += m.durationBeatTime;
+                tempoMoyen       += m.tempo * m.beatDuration;
+                beatDuration += m.beatDuration;
             }
 
             // Tempo moyen (pondéré)
-            tempoMoyen = tempoMoyen / durationBeatTime;
+            tempoMoyen = tempoMoyen / beatDuration;
             return tempoMoyen;
         }
 
@@ -578,7 +582,7 @@ module als {
         get tempo() {
             if (!this._tempo) {
                 if (!this.next) throw new Error('Impossible de calculer le tempo du dernier WarpMarker');
-                this._tempo = this.durationBeatTime / this.durationSecTime * 60;
+                this._tempo = this.beatDuration / this.secDuration * 60;
             }
             return this._tempo;
         }
@@ -587,7 +591,7 @@ module als {
          * Durée avant le prochain WarpMarker (en battements)
          * @constructor
          */
-        get durationBeatTime() {
+        get beatDuration() {
             if (!this.next) throw new Error('Impossible de calculer la durée du dernier WarpMarker');
             return this.next.beatTime - this.beatTime;
         }
@@ -596,7 +600,7 @@ module als {
          * Durée avant le prochain WarpMarker (en secondes)
          * @constructor
          */
-        get durationSecTime() {
+        get secDuration() {
             if (!this.next) throw new Error('Impossible de calculer la durée du dernier WarpMarker');
             return this.next.secTime - this.secTime;
         }
@@ -615,7 +619,7 @@ module als {
             // accélération par rapport à la durée du précédent segment (en bpm / battement)
             var acc = 0;
             if (this.prev) {
-                acc = diff / this.prev.durationBeatTime;
+                acc = diff / this.prev.beatDuration;
             }
 
             return acc
