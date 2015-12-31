@@ -1,0 +1,10 @@
+C:\Users\mlavigne\AppData\Roaming\npm\node_modules\typescript\lib
+	Error:Error has occurred in the compile process TypeError: undefined is not a function
+	
+C:\Users\mlavigne\AppData\Roaming\npm\node_modules\typescript\bin
+	"Cannot find file typescriptServices.js in the directory ..."
+	
+Copy to C:\Users\mlavigne\AppData\Roaming\npm\node_modules\typescript\bin
+	- lib.d.ts
+	- typescriptServices.js
+	Error:Error has occurred in the compile process TypeError: undefined is not a function
