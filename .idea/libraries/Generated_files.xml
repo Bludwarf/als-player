@@ -1,0 +1,27 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/lib/types.js" />
+        <item url="file://$PROJECT_DIR$/lib/utils.js" />
+        <item url="file://$PROJECT_DIR$/lib/als-module.js" />
+        <item url="file://$PROJECT_DIR$/lib/WarpMarker.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/LiveSet.js" />
+      <root url="file://$PROJECT_DIR$/lib/Measure.js" />
+      <root url="file://$PROJECT_DIR$/lib/als.ts.js" />
+      <root url="file://$PROJECT_DIR$/lib/Section.js" />
+      <root url="file://$PROJECT_DIR$/lib/LiveSet.js" />
+      <root url="file://$PROJECT_DIR$/lib/Measure.js" />
+      <root url="file://$PROJECT_DIR$/lib/als.ts.js" />
+      <root url="file://$PROJECT_DIR$/lib/Section.js" />
+      <root url="file://$PROJECT_DIR$/lib/types.js" />
+      <root url="file://$PROJECT_DIR$/lib/utils.js" />
+      <root url="file://$PROJECT_DIR$/lib/als-module.js" />
+      <root url="file://$PROJECT_DIR$/lib/WarpMarker.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>
