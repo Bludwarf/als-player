@@ -6,7 +6,8 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+      "x-last": "dc9dabe74a5be62613b17a3605309783a12ff28a",
+      "commit": "2b781309d1f43a3d56fb6c0339cc433327f37a0c"
     },
     "underscore/underscore.d.ts": {
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
@@ -15,7 +16,7 @@
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     },
     "async/async.d.ts": {
-      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+      "commit": "419793fb796b0e5c1ed11e018ad28475de0c3735"
     }
   }
 }

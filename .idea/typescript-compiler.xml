@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="TypeScriptCompiler">
-    <option name="typeScriptServiceDirectory" value="C:\Users\mlavigne\AppData\Roaming\npm\node_modules\typescript\bin" />
+    <option name="isCompilerEnabled" value="true" />
     <option name="typeScriptCompilerParams" value="--target es5 --module commonjs" />
-    <option name="versionType" value="SERVICE_DIRECTORY" />
   </component>
 </project>

@@ -3,20 +3,41 @@
  */
 import utils = require('./utils');
 
+/**
+ * a dummy class it to inherite array.
+ * @author http://stackoverflow.com/a/14001136/1655155
+ */
+class ArrayClass<T> {
+    constructor() {
+        Array.apply(this, arguments);
+        return new Array();
+    }
+    // we need this, or TS will show an error,
+    //XArray["prototype"] = new Array(); will replace with native js arrray function
+    pop(): any { return "" }
+    push(val): number { return 0; }
+    length: number;
+}
+//Adding Arrray to XArray prototype chain.
+ArrayClass["prototype"] = new ArrayClass();
+
+
 module als {
+
+    class PathMatcher {
+
+        /**
+         * Conversion d'un path dans le Set Live vers un Path pour la machine actuelle
+         * @param path
+         */
+        public replace(path : string) : string {
+            throw new Error('abstract method');
+        }
+    }
 
     var RELATIVE_PATH_ROOT = '/Users/bludwarf/Dropbox/Musiques/Funk Pierre/Sets Live';
     var navigator_isMac = false; // FIXME
-    var pathMatcher : any = {};
-
-
-    /**
-     *
-     * @param pathMatcher {PathMatcher}
-     */
-    function setPathMatcher(pathMatcher) {
-        this.pathMatcher = pathMatcher;
-    }
+    var pathMatcher : PathMatcher = null;
 
     /**
      * Valeur d'une propriété
@@ -471,7 +492,7 @@ module als {
         }
     }
 
-    export class WarpMarkers extends Array<WarpMarker> {
+    export class WarpMarkers extends ArrayClass<WarpMarker> {
 
         constructor(array : Array<any>) {
             super();
@@ -623,6 +644,10 @@ module als {
             }
 
             return acc
+        }
+
+        get test() {
+            return "test";
         }
 
     }

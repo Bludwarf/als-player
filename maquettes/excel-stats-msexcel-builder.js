@@ -46,6 +46,7 @@ als.WarpMarkers.load(argv.file, function(err, warpMarkers) {
         if (m.next) {
             sheet1.set(3, i, m.beatDuration);
             sheet1.set(4, i, m.tempo);
+            console.log(m.test);
             if (i > i0) sheet1.set(5, i, m.acceleration);
         }
 
