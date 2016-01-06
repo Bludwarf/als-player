@@ -1,7 +1,9 @@
 /**
  * Created by mlavigne on 30/12/2015.
  */
+///<reference path='../typings/tsd.d.ts'/>
 import utils = require('./utils');
+import async = require("async");
 
 /**
  * a dummy class it to inherite array.
@@ -88,6 +90,73 @@ module als {
         return elements[elements.length - 1];
     }
 
+    /**
+     * Charge plusieurs fichiers JSON et renvoie le résultat de manière synchrone.
+     *
+     * Exemple :
+     *
+     * var voyageJsonParts = als.loadJsonParts({
+            audioClips:  dir + "/Voyage-20151217.small.audioClips.json",
+            midiClips:   dir + "/Voyage-20151217.midiClips.json",
+            warpMarkers: dir + "/Voyage-20151217.warpMarkers.json"
+        });
+
+       Exemple avec syntaxe en motif :
+
+       var voyageJsonParts = als.loadJsonParts(dir + "/Voyage-20151217.*.json");
+
+     *
+     * @param jsonFiles {{audioClips, midiClips, warpMarkers}} cf als.split ou syntaxe '.../MonFichier.*.json' pour chercher automatiquement tous les fichiers
+     * @returns {{audioClips, midiClips, warpMarkers}}
+     */
+    export function loadJsonParts(jsonFiles) {
+
+        // Syntax '.../Voyage-20151217.*.json' ?
+        if (typeof jsonFiles === 'string' && jsonFiles.indexOf('*') != -1) {
+            var partNames = [
+                'audioClips',
+                'midiClips',
+                'warpMarkers'
+            ];
+            var partFilenames = {
+                audioClips:  "small.audioClips",
+                midiClips:   "midiClips",
+                warpMarkers: "warpMarkers"
+            };
+            var pattern = jsonFiles;
+            jsonFiles = {};
+            partNames.forEach(function(partName) {
+                jsonFiles[partName] = pattern.replace('*', partFilenames[partName]);
+            });
+        }
+
+        // tasks
+        var jsonParts;
+        var tasks : any = {};
+
+        for (var partName in jsonFiles) {
+            (function(partName) {
+                var file = jsonFiles[partName];
+                tasks[partName] = function(cb) {
+                    utils.readJsonFile(file, cb);
+                }
+            })(partName);
+        }
+
+        // Async
+        async.parallel(tasks,
+            function(err, results) {
+                if (err) throw err;
+                jsonParts = results;
+            });
+
+        // Wait with deasync
+        while(jsonParts === undefined) {
+            require('deasync').runLoopOnce();
+        }
+
+        return jsonParts;
+    }
 
     /**
      * Set Live à partir de fragments JSON du fichier .als d'origine converti par als-player/lib/als.js
@@ -102,29 +171,40 @@ module als {
         public midiClips; // JSON
         public warpMarkers; // JSON
 
-        public sections : Array<Section>;
+        private _sections : Array<Section>;
 
         private _file : string;
 
         /**
          * Set Live à partir de fragments JSON du fichier .als d'origine converti par als-player/lib/als.js
-         * @param name {String} nom unique du Set
-         * @param jsonParts {{audioClips, midiClips, warpMarkers}} cf als.split
+         * @param name {String} nom unique du Set (par exemple le nom du fichier als sans extension)
+         * @param jsonParts {{audioClips, midiClips, warpMarkers}} chemins vers des fragments du fichier ALS au format JSON (cf als.split)
          * @constructor
          */
-        constructor(name, jsonParts) {
+        constructor(name, jsonParts?) {
+            if (!name) throw new Error('name obligatoire');
             this.name = name;
-            this.audioClips = jsonParts.audioClips;
-            this.midiClips = jsonParts.midiClips;
-            this.warpMarkers = jsonParts.warpMarkers;
 
-            // Création des sections à partir des audioClips (ou des midiClips si présents)
-            this.sections = [];
-            var clips = this.midiClips || this.audioClips;
-            for (var i = 0; i < clips.length; ++i) {
-                var section = new Section(this, i);
-                this.sections.push(section);
+            if (jsonParts) {
+                this.audioClips = jsonParts.audioClips;
+                this.midiClips = jsonParts.midiClips;
+                this.warpMarkers = jsonParts.warpMarkers;
             }
+        }
+
+        get sections() : Array<Section> {
+            if (!this._sections) {
+                // Création des sections à partir des audioClips (ou des midiClips si présents)
+                var clips = this.midiClips || this.audioClips;
+                if (clips) {
+                    this._sections = [];
+                    for (var i = 0; i < clips.length; ++i) {
+                        var section = new Section(this, i);
+                        this._sections.push(section);
+                    }
+                }
+            }
+            return this._sections;
         }
 
         /**
@@ -380,11 +460,21 @@ module als {
             return parent.sections[this.index + 1];
         }
 
+        get prev() : Section {
+            var parent = this.parent;
+            if (!parent || !parent.sections || this.index <= 0) return null;
+            return parent.sections[this.index - 1];
+        }
+
         get beatDuration() : number {
             return this.currentEnd - this.currentStart;
         }
 
-        get measures() {
+        /**
+         * Pour l'instant considère uniquement du 4/4
+         * @returns {Array<Measure>}
+         */
+        get measures() : Array<Measure> {
             var measures = this._measures;
             if (!measures) {
                 var lastIncomplete = this.beatDuration % 4 != 0;
