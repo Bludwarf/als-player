@@ -12,7 +12,6 @@ var res = __dirname + '/../resources';
     midiClips:   res + "/Voyage-20151217.midiClips.json",
     warpMarkers: res + "/Voyage-20151217.warpMarkers.json"
 });*/
-var voyageJsonParts = als.loadJsonParts(res + "/Voyage-20151217.*.json");
 
 // TODO : charger les JSON puis lancer les tests
 
@@ -26,7 +25,13 @@ describe('LiveSet', function() {
         });
 
         it('init with JSON files', function () {
+            var voyageJsonParts = als.loadJsonParts(res + "/Voyage-20151217.*.json");
             var liveSet = new als.LiveSet("Voyage-20151217", voyageJsonParts);
+            assert.notEqual(liveSet, null);
+        });
+
+        it('load with JSON files', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
             assert.notEqual(liveSet, null);
         });
     });
@@ -34,7 +39,7 @@ describe('LiveSet', function() {
     describe('#sections', function () {
 
         it('Voyage', function () {
-            var liveSet = new als.LiveSet("Voyage-20151217", voyageJsonParts);
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
             assert.notEqual(liveSet.sections, null);
             assert.equal(liveSet.sections.length, 27);
             assert.notEqual(liveSet.sections[0], null);
@@ -42,11 +47,36 @@ describe('LiveSet', function() {
         });
     });
 
+    describe('#sectionAt', function () {
+
+        it('Mini Refrain', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            var section = liveSet.sectionAt(96); // 80 en relatif mais 96 en absolu on trouve le début de "Mini Refrain"
+            assert.equal(section.name, "Mini Refrain");
+
+            // idem en 96.1 jusqu'à 99.9
+            assert.equal(liveSet.sectionAt(96.1), section);
+            assert.equal(liveSet.sectionAt(97), section);
+            assert.equal(liveSet.sectionAt(98), section);
+            assert.equal(liveSet.sectionAt(99), section);
+            assert.equal(liveSet.sectionAt(99.9), section);
+
+            // juste avant : "Couplet" et après
+            assert.equal(liveSet.sectionAt(95).name, "Couplet");
+            assert.equal(liveSet.sectionAt(108).name, "Couplet");
+
+            // TODO : tester répétition => même nom mais objet différent
+
+            // Renvoyait une erreur
+            assert.notEqual(liveSet.sectionAt(512), null);
+        });
+    });
+
 });
 
 describe('Section', function() {
 
-    var liveSet = new als.LiveSet("Voyage-20151217", voyageJsonParts);
+    var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
     var sections = liveSet.sections;
     var first = sections[0];
     var second = sections[1];
@@ -123,6 +153,19 @@ describe('Section', function() {
             assert.equal(first.prev, null);
             assert.equal(second.prev, first);
             assert.equal(last.prev, prevLast);
+        });
+
+    });
+
+    describe('#tempo', function () {
+
+        it('should be good when exact fit with WarpMarkers', function () {
+            assert.equal(first.tempo.toFixed(8), 68.45895447);
+        });
+
+        it('should be good when starts between WarpMarkers ', function () {
+            console.log("end:"+prevLast.currentEnd);
+            assert.equal(prevLast.tempo.toFixed(8), 69.44493276);
         });
 
     });

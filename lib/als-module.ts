@@ -3,6 +3,8 @@
  */
 ///<reference path='../typings/tsd.d.ts'/>
 import utils = require('./utils');
+import fs = require("fs");
+import _ = require("underscore");
 import async = require("async");
 
 /**
@@ -71,17 +73,17 @@ module als {
      * @returns {*} l'élément qui commence avant (ou pile) le beatTime/secTime indiqué
      */
     function elementAt(elements, filter) {
-        var prop = _.keys(filter)[0];
-        var value = filter[prop];
+        var name = _.keys(filter)[0];
+        var value = filter[name];
 
         var first = elements[0];
-        if (value < this.prop(first, prop)) return null;
+        if (value < prop(first, name)) return null;
         //var last = elements[elements.length - 1];
         //if (first != last && beatTime > last.currentEnd) return null;
 
         for (var i = elements.length - 1; i >= 0; --i) {
             var element = elements[i];
-            if (value >= this.prop(element, prop)) {
+            if (value >= prop(element, name)) {
                 return element;
             }
         }
@@ -137,8 +139,13 @@ module als {
         for (var partName in jsonFiles) {
             (function(partName) {
                 var file = jsonFiles[partName];
-                tasks[partName] = function(cb) {
-                    utils.readJsonFile(file, cb);
+                if (fs.existsSync(file)) {
+                    tasks[partName] = function (cb) {
+                        utils.readJsonFile(file, cb);
+                    }
+                }
+                else {
+                    console.warn("On ne peut pas charger le fichier "+file+" car il n'existe pas");
                 }
             })(partName);
         }
@@ -160,9 +167,6 @@ module als {
 
     /**
      * Set Live à partir de fragments JSON du fichier .als d'origine converti par als-player/lib/als.js
-     * @param name {String} nom unique du Set
-     * @param jsonParts {{audioClips, midiClips, warpMarkers}} cf als.split
-     * @constructor
      */
     export class LiveSet {
 
@@ -178,7 +182,7 @@ module als {
         /**
          * Set Live à partir de fragments JSON du fichier .als d'origine converti par als-player/lib/als.js
          * @param name {String} nom unique du Set (par exemple le nom du fichier als sans extension)
-         * @param jsonParts {{audioClips, midiClips, warpMarkers}} chemins vers des fragments du fichier ALS au format JSON (cf als.split)
+         * @param jsonParts {{audioClips, midiClips, warpMarkers}} (cf als.split) ou syntaxe '.../MonFichier.*.json' pour chercher automatiquement tous les fichiers
          * @constructor
          */
         constructor(name, jsonParts?) {
@@ -186,9 +190,15 @@ module als {
             this.name = name;
 
             if (jsonParts) {
+                // Syntax '.../Voyage-20151217.*.json' ?
+                if (typeof jsonParts === 'string' && jsonParts.indexOf('*') != -1) {
+                    var jsonFiles = jsonParts;
+                    jsonParts = loadJsonParts(jsonFiles);
+                }
+
                 this.audioClips = jsonParts.audioClips;
                 this.midiClips = jsonParts.midiClips;
-                this.warpMarkers = jsonParts.warpMarkers;
+                this.warpMarkers = new WarpMarkers(jsonParts.warpMarkers);
             }
         }
 
@@ -202,6 +212,9 @@ module als {
                         var section = new Section(this, i);
                         this._sections.push(section);
                     }
+                }
+                else {
+                    console.warn("Aucun clip trouvé pour ce morceau");
                 }
             }
             return this._sections;
@@ -252,12 +265,12 @@ module als {
         indexOfWarpMarkerAt(beatTime) {
             // TODO : utiliser als.elementAt
             for (var i = 0; i < this.warpMarkers.length - 1; ++i) { // jusqu'à l'avant dernier
-                var warpMarker = this.warpMarkers[i];
+                var m = this.warpMarkers[i];
 
-                if (warpMarker.$.BeatTime < beatTime) continue;
+                if (m.beatTime < beatTime) continue;
 
                 // BeatTime supérieur
-                if (warpMarker.$.BeatTime > beatTime) {
+                if (m.beatTime > beatTime) {
                     if (i == 0) throw new Error('warpMarkerAt('+beatTime+') impossible avant le premier WarpMarker');
                     return i - 1;
                 }
@@ -292,44 +305,57 @@ module als {
 
         /**
          *
-         * @param beatTime
+         * @param beatTime absolu dans le SetLive et pas relatif comme dans les WarpMarkers
          * @returns {Section}
          */
-        sectionAt(beatTime) : Section {
+        sectionAt(beatTime : number) : Section {
             var sections = this.sections;
 
-            // Supérieur au début de la dernière section ?
-            var last = sections[sections.length - 1];
-            if (beatTime >= last.currentEnd) throw new Error('Supérieur ou égal à la fin de la dernière section de ' + this.name);
-            if (beatTime >= last.currentStart) return last;
-
-            var sectionBefore, sectionAfter;
-            for (var i = 0; i < sections.length - 1; ++i) { // jusqu'à avant dernière
-                var section = sections[i];
-
-                if (section.beatTime < beatTime) continue;
-
-                // BeatTime supérieur
-                if (section.beatTime > beatTime) {
-                    sectionAfter = section;
-                    if (section.beatTime === beatTime) {
-                        sectionBefore = section;
-                    }
-                    else {
-                        if (i == 0) throw new Error('Impossible de trouver getSectionAt(' + beatTime + ') avant la première section');
-                        sectionBefore = sections[i - 1];
-                    }
-
-                    return sectionBefore;
+            if (sections) {
+                // Supérieur au début de la dernière section ?
+                var last = sections[sections.length - 1];
+                if (beatTime >= last.currentEnd) {
+                    console.warn(beatTime + ' Supérieur ou égal à la fin de la dernière section de ' + this.name);
+                    return null;
                 }
+                if (beatTime >= last.currentStart) return last;
 
-                // BeatTime connu
-                else {
-                    return section;
+                var sectionBefore, sectionAfter;
+                for (var i = 0; i < sections.length; ++i) {
+                    var section = sections[i];
+
+                    if (section.beatTime < beatTime) continue;
+
+                    // BeatTime supérieur
+                    if (section.beatTime > beatTime) {
+                        sectionAfter = section;
+                        if (section.beatTime === beatTime) {
+                            sectionBefore = section;
+                        }
+                        else {
+                            if (i == 0) {
+                                console.error('Impossible de trouver getSectionAt(' + beatTime + ') avant la première section');
+                                return null;
+                            }
+                            sectionBefore = sections[i - 1];
+                        }
+
+                        return sectionBefore;
+                    }
+
+                    // BeatTime connu
+                    else {
+                        return section;
+                    }
                 }
             }
 
             throw new Error('sectionAt(' + beatTime + ') non implémenté pour le morceau ' + this.name);
+        }
+
+        sectionAt_WarpMarker(m : WarpMarker) : Section {
+            throw new Error('@deprecated : on doit calculer le beatTime absolu en connaissant le Set dont sont extraits ces WarpMarkers');
+            //return this.sectionAt(m.beatTime);
         }
 
         /**
@@ -392,8 +418,22 @@ module als {
         }
 
         // TODO : faire un méthode set.findSection({beatTime: 60}) ou set.findSection({secTime: 159.65984})
+
+        /**
+         * Début réel de l'audio de référence
+         */
+        get currentStart() {
+            var audioClip = this.audioClips[0];
+            var currentStart = parseFloat(audioClip.$.Time); // <CurrentStart Value="14.268227345571095" />
+            var loopStart = parseFloat(audioClip.Loop[0].LoopStart[0].$.Value); // <LoopStart Value="-1.7317726544289045" />
+            return currentStart - loopStart;
+        }
+
     }
 
+    /**
+     * Relativement à une structure qui se base un clip audio de référence
+     */
     export class Section {
 
         /**
@@ -402,6 +442,7 @@ module als {
         public set : LiveSet;
         private index : number;
         private json;
+        private isAudio : boolean;
 
         private _measures : Array<Measure>;
 
@@ -410,6 +451,7 @@ module als {
             if (typeof index === 'undefined') throw new Error('Impossible de créer une section sans index');
             this.index = index;
             this.json = this.set.midiClips ? this.set.midiClips[index] : this.set.audioClips[index];
+            this.isAudio = !(this.set.midiClips);
         }
 
         /**
@@ -437,6 +479,30 @@ module als {
 
         get beatTime() {
             return this.currentStart; // on pourrait prendre aussi <AudioClip Time="96">
+        }
+
+        /**
+         * Relatif à la première Section
+         * @param beatTime
+         * @returns {number}
+         */
+        protected relativeBeatTime(beatTime : number) {
+            /*var clips = this.parent.midiClips ? this.parent.midiClips : this.parent.audioClips;
+            var offset = parseFloat(clips[0].$.Time);*/
+            var offset = this.parent.currentStart;
+            return beatTime - offset;
+        }
+
+        get beatTimeRelative() : number {
+            return this.relativeBeatTime(this.beatTime);
+        }
+
+        get currentStartRelative() : number {
+            return this.relativeBeatTime(this.currentStart);
+        }
+
+        get currentEndRelative() : number {
+            return this.relativeBeatTime(this.currentEnd);
         }
 
         get secTime() {
@@ -558,6 +624,16 @@ module als {
              return this.secTime + (beatTime - this.beatTime) * this.beatValue;*/
         }
 
+        /**
+         * Tempo moyen (pondéré) recalculé à chaque appel
+         * @returns {number}
+         */
+        get tempo() : number {
+            var currentStart = this.currentStartRelative;
+            var currentEnd = this.currentEndRelative;
+            return this.parent.warpMarkers.tempo_between(currentStart, currentEnd);
+        }
+
         get style() {
             return {
                 left: this.beatTime / this.set.beatDuration * 100 + '%',
@@ -636,7 +712,7 @@ module als {
          * Tempo moyen (pondéré)
          * @returns {number}
          */
-        get tempo() {
+        get tempo() : number {
             var tempoMoyen = 0;
             var beatDuration = 0;
             for (var i = 1; i+1 < this.length; ++i) {
@@ -652,11 +728,52 @@ module als {
             return tempoMoyen;
         }
 
+        /**
+         * Tempo moyen (pondéré)
+         * @param start inclu
+         * @param end exclu
+         * @returns {number}
+         */
+        public tempo_between(start : number, end : number) : number {
+            var m = this.warpMarkerAt(start);
+
+            // Tempo pondéré
+            var tempoMoyen = 0;
+            var beatDuration = 0;
+            /*var tempoMoyen = m.tempo;
+            var beatDuration = m.beatDuration - (start - m.beatTime);
+            m = m.next; // on passe au suivant*/
+
+            // Boucle sur chaque WarpMarker
+            while (m.beatTime < end) {
+                var currentBeatDuration = m.beatDuration;
+
+                // Si start ne tombe pas juste sur un WarpMarker on diminue la durée du premier WarpMarker qui est incomplet sur la tranche demandée
+                if (m.beatTime < start) {
+                    currentBeatDuration -= start - m.beatTime;
+                }
+
+                tempoMoyen += m.tempo * currentBeatDuration;
+                beatDuration += currentBeatDuration;
+                m = m.next;
+            }
+
+            // Tempo moyen (pondéré)
+            tempoMoyen = tempoMoyen / beatDuration;
+            return tempoMoyen;
+        }
+
+        public warpMarkerAt(beatTime : number) : WarpMarker {
+            return elementAt(this, {beatTime : beatTime});
+        }
+
     }
 
     export class WarpMarker {
 
         public secTime  : number; // float
+
+        /** RELATIF à l'AudioClip d'origine. Pour avoir le BeatTime absolu dans le Set Live il faut ajouter LiveSet.currentStart */
         public beatTime : number; // float
 
         public prev : WarpMarker;
@@ -734,10 +851,6 @@ module als {
             }
 
             return acc
-        }
-
-        get test() {
-            return "test";
         }
 
     }
