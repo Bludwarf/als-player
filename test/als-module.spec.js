@@ -136,6 +136,17 @@ describe('LiveSet', function() {
         });
     });
 
+    describe('#locators', function () {
+
+        it('should get the only one locator', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            assert.notEqual(liveSet.locators, null);
+            assert.equal(liveSet.locators.length, 1);
+            var locator = liveSet.locators[0];
+            assert.equal(locator.Name[0].$.Value, "Tchouchou");
+        });
+    });
+
 });
 
 describe('Section', function() {

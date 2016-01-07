@@ -172,12 +172,14 @@ module als {
             var partNames = [
                 'audioClips',
                 'midiClips',
-                'warpMarkers'
+                'warpMarkers',
+                'locators'
             ];
             var partFilenames = {
                 audioClips:  "small.audioClips",
                 midiClips:   "midiClips",
-                warpMarkers: "warpMarkers"
+                warpMarkers: "warpMarkers",
+                locators: "locators"
             };
             var pattern = jsonFiles;
             jsonFiles = {};
@@ -227,7 +229,8 @@ module als {
         public name : string;
         public audioClips; // JSON
         public midiClips; // JSON
-        public warpMarkers; // JSON
+        public warpMarkers;
+        public locators : Array<any>; // JSON
 
         private _sections : Array<Section>;
 
@@ -253,6 +256,7 @@ module als {
                 this.audioClips = jsonParts.audioClips;
                 this.midiClips = jsonParts.midiClips;
                 this.warpMarkers = new WarpMarkers(jsonParts.warpMarkers);
+                this.locators = jsonParts.locators;
             }
         }
 
