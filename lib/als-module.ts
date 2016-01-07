@@ -55,13 +55,20 @@ module als {
      * @param prop en miniscule. par exemple beatTime ou secTime
      * @returns {*}
      */
-    function prop(element, prop) {
+    function prop(element : any, prop : string) : number {
         if (element.$) {
             // JSON Ableton Live
             var xmlProp = prop[0].toUpperCase() + prop.substring(1);
             return parseFloat(element.$[xmlProp]);
         }
-        else return element[prop];
+
+        var child = element[prop];
+        if (!child) return null;
+
+        // <Child Value="16" />
+        if (child.$ && child.$.Value) return parseFloat(child.$.Value);
+
+        return parseFloat(child);
     }
 
     function beatTime(element) {
@@ -123,7 +130,7 @@ module als {
     /**
      * Exemple : als.elementAt(set.warpMarkers, {secTime: 0})
      * @param elements {*[]}
-     * @param filter {{[beatTime]: float, [secTime]: float}}
+     * @param filter {{[beatTime]: float, [secTime]: float}} ou par défaut beatTime directement (!? coïcidence)
      * @returns {*} l'élément qui commence avant (ou pile) le beatTime/secTime indiqué
      */
     function elementAt(elements, filter) {
@@ -483,6 +490,14 @@ module als {
             return currentStart - loopStart;
         }
 
+        /**
+         *
+         * @param filter cf als#elementAt
+         */
+        public locatorAt(filter : any) : any {
+            return elementAt(this.locators, filter);
+        }
+
     }
 
     /**
@@ -711,6 +726,13 @@ module als {
                 //right: 100 - (this.next ? this.next.beatTime : this.set.beatDuration) / this.set.beatDuration * 100 + '%'
                 width: this.beatDuration / this.set.beatDuration * 100 + '%'
             }
+        }
+
+        /**
+         * Le repère placé exactement au début de cette section s'il y en a un
+         */
+        get locator() : any {
+            return this.parent.locatorAt(this.beatTime);
         }
 
     }

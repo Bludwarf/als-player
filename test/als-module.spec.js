@@ -147,6 +147,15 @@ describe('LiveSet', function() {
         });
     });
 
+    describe('#locators', function () {
+
+        it('should get the only one locator', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            var locator = liveSet.locatorAt(16);
+            assert.equal(locator, liveSet.locators[0]);
+        });
+    });
+
 });
 
 describe('Section', function() {

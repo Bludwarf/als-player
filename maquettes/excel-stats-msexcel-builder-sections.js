@@ -26,6 +26,9 @@ var sheet1 = workbook.createSheet('sheet1', 10, liveSet.sections.length + 1);
  sheet1.set(i, 1, 'test'+i);
  */
 
+var cols = {};
+cols.locator = 9;
+
 // Titres
 sheet1.set(1, 1, "BeatTime");
 sheet1.set(2, 1, "WarpMarker");
@@ -35,6 +38,7 @@ sheet1.set(5, 1, "SecDuration");
 sheet1.set(6, 1, "Tempo");
 sheet1.set(7, 1, "Accélération");
 sheet1.set(8, 1, "Section");
+sheet1.set(cols.locator, 1, "Repère");
 
 // Test Excel
 var i0 = 2;
@@ -53,6 +57,7 @@ liveSet.sections.forEach(function(section) {
     sheet1.set(6, i, section.tempo);
     if (i > i0) sheet1.set(7, i, section.acceleration);
     sheet1.set(8, i, section.name);
+    if (section.locator) sheet1.set(cols.locator, i, section.locator);
 
     ++i;
 });
