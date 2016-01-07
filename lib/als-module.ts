@@ -259,10 +259,13 @@ module als {
 
         /**
          *
-         * @param beatTime
+         * @param beatTime absolu (sera converti en relatif par rapport à l'AudioClip de référence)
          * @returns {*} le dernier marker si on a dépassé le dernier beat
+         * @deprecated
          */
         indexOfWarpMarkerAt(beatTime) {
+            beatTime = beatTime - this.currentStart; // relatif à l'AudioClip de référence
+
             // TODO : utiliser als.elementAt
             for (var i = 0; i < this.warpMarkers.length - 1; ++i) { // jusqu'à l'avant dernier
                 var m = this.warpMarkers[i];
@@ -285,22 +288,15 @@ module als {
             return this.warpMarkers.length - 2;
         }
 
+        /**
+         * SecTime relativement à l'AudioClip de référence
+         * @param beatTime beatTime absolu
+         * @returns {number|number}
+         */
         secTime(beatTime) {
-            // TODO : utiliser als.elementAt
-            var i = this.indexOfWarpMarkerAt(beatTime);
-            var warpMarkerBefore = this.warpMarkers[i];
-            var secTime = parseFloat(warpMarkerBefore.$.SecTime);
-
-            if (parseFloat(warpMarkerBefore.$.BeatTime) === beatTime) return secTime;
-
-            // Interpolation
-            var warpMarkerAfter = this.warpMarkers[i + 1];
-            if (!warpMarkerBefore.beatValue) {
-                var secDiff = warpMarkerAfter.$.SecTime - warpMarkerBefore.$.SecTime;
-                var beatDiff = warpMarkerAfter.$.BeatTime - warpMarkerBefore.$.BeatTime;
-                warpMarkerBefore.beatValue = secDiff / beatDiff;
-            }
-            return parseFloat(warpMarkerBefore.$.SecTime) + (beatTime - warpMarkerBefore.$.BeatTime) * warpMarkerBefore.beatValue;
+            // TODO : tout mettre dans warpMarkers
+            var beatTimeRel = beatTime - this.currentStart;
+            return this.warpMarkers.secTimeAt(beatTimeRel);
         }
 
         /**
@@ -505,6 +501,10 @@ module als {
             return this.relativeBeatTime(this.currentEnd);
         }
 
+        /**
+         * SecTime relativement à l'AudioClip de référence
+         * @returns {number|number}
+         */
         get secTime() {
             return this.parent.secTime(this.beatTime); // TODO : cache
         }
@@ -763,8 +763,23 @@ module als {
             return tempoMoyen;
         }
 
+        /**
+         *
+         * @param beatTime relatif à l'AudioClip de référence
+         * @returns {number}
+         */
         public warpMarkerAt(beatTime : number) : WarpMarker {
             return elementAt(this, {beatTime : beatTime});
+        }
+
+        /**
+         *
+         * @param beatTime relatif à l'AudioClip de référence
+         * @returns {number}
+         */
+        public secTimeAt(beatTime : number) : number {
+            var warpMarker = this.warpMarkerAt(beatTime);
+            return warpMarker.secTimeAt(beatTime);
         }
 
     }
@@ -851,6 +866,23 @@ module als {
             }
 
             return acc
+        }
+
+        get beatValue() : number {
+            var secDiff = this.next.secTime - this.secTime;
+            var beatDiff = this.next.beatTime - this.beatTime;
+            return secDiff / beatDiff;
+        }
+
+        /**
+         *
+         * @param beatTime relatif à l'AudioClip de référence
+         */
+        public secTimeAt(beatTime : number) : number {
+            if (this.beatTime === beatTime) return this.secTime; // pile sur le WarpMarker
+
+            // Interpolation
+            return this.secTime + (beatTime - this.beatTime) * this.beatValue;
         }
 
     }

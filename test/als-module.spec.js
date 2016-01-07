@@ -72,6 +72,45 @@ describe('LiveSet', function() {
         });
     });
 
+    describe('#indexOfWarpMarkerAt', function () {
+
+        /*
+         Le 1 de l'AudioClip commence au beat 16
+
+         <AudioClip Time="14.268227345571095">
+         <LoopStart Value="-1.7317726544289045" />
+
+         <WarpMarker SecTime="0" BeatTime="-1.7317726544289045" />
+         <WarpMarker SecTime="1.4676190476190476" BeatTime="0" />
+         <WarpMarker SecTime="4.9623129251700684" BeatTime="4" />
+         */
+
+        it('should get 2nd WarpMarker', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            var i = liveSet.indexOfWarpMarkerAt(16); // <WarpMarker SecTime="1.4676190476190476" BeatTime="0" />
+            assert.equal(i, 1);
+        });
+    });
+
+    describe('#secTime', function () {
+
+        /*
+         Le 1 de l'AudioClip commence au beat 16
+
+         <AudioClip Time="14.268227345571095">
+         <LoopStart Value="-1.7317726544289045" />
+
+         <WarpMarker SecTime="0" BeatTime="-1.7317726544289045" />
+         <WarpMarker SecTime="1.4676190476190476" BeatTime="0" />
+         <WarpMarker SecTime="4.9623129251700684" BeatTime="4" />
+         */
+
+        it('correct AudioClip offset', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            assert.equal(liveSet.secTime(16), 1.4676190476190476); // <WarpMarker SecTime="1.4676190476190476" BeatTime="0" />
+        });
+    });
+
 });
 
 describe('Section', function() {

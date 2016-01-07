@@ -45,7 +45,7 @@ liveSet.sections.forEach(function(section) {
 
     sheet1.set(1, i, section.beatTime); // TODO msexcel-fix : les 0 sont stockés comme cellule vide
     sheet1.set(2, i, section.beatTimeRelative);
-    //sheet1.set(3, i, section.secTime);
+    sheet1.set(3, i, section.secTime);
     sheet1.set(4, i, section.beatDuration);
     sheet1.set(5, i, section.tempo);
     //if (i > i0) sheet1.set(6, i, section.acceleration);
