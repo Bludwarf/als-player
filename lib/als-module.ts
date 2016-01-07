@@ -87,6 +87,21 @@ module als {
     }
 
     /**
+     * Accélération en tenant compte de l'intervale entre les deux changement de tempo en bpm / battement  (c'est-à-dire en secondes ?)
+     * @param tempo
+     * @param prevTempo tempo précédent
+     * @param duration intervale en beat entre les deux tempos
+     * @returns {number} bpm / battement  (c'est-à-dire en secondes ?)
+     */
+    export function acceleration(prevTempo : number, duration : number, tempo : number) : number {
+        // diff de tempo avec le précédent
+        var diff = tempo - prevTempo;
+
+        // accélération par rapport à l'intervale entre les deux tempos (en bpm / battement)
+        return diff / duration;
+    }
+
+    /**
      * Exemple : als.elementAt(set.warpMarkers, {secTime: 0})
      * @param elements {*[]}
      * @param filter {{[beatTime]: float, [secTime]: float}}
@@ -658,6 +673,15 @@ module als {
             return this.beatDuration / this.secDuration * 60;
         }
 
+        /**
+         * Accélération par rapport à la précédente Section en bpm / battement (c'est-à-dire en secondes ?)
+         * @returns {number}
+         */
+        get acceleration() : number {
+            if (!this.prev) throw new Error("Impossible de calculer une accéleration sans élément précédent");
+            return als.acceleration(this.prev.tempo, this.prev.beatDuration, this.tempo);
+        }
+
         get style() {
             return {
                 left: this.beatTime / this.set.beatDuration * 100 + '%',
@@ -877,19 +901,8 @@ module als {
          * @returns {number}
          */
         get acceleration() {
-            // diff de tempo avec le dernier BeatMarker
-            var diff = 0;
-            if (this.prev) {
-                diff = this.tempo - this.prev.tempo;
-            }
-
-            // accélération par rapport à la durée du précédent segment (en bpm / battement)
-            var acc = 0;
-            if (this.prev) {
-                acc = diff / this.prev.beatDuration;
-            }
-
-            return acc
+            if (!this.prev) throw new Error("Impossible de calculer une accéleration sans élément précédent");
+            return als.acceleration(this.prev.tempo, this.prev.beatDuration, this.tempo);
         }
 
         get beatValue() : number {

@@ -51,7 +51,7 @@ liveSet.sections.forEach(function(section) {
     sheet1.set(4, i, section.beatDuration);
     sheet1.set(5, i, argv.ms ? als.toMS(section.secDuration) : section.secDuration);
     sheet1.set(6, i, section.tempo);
-    //if (i > i0) sheet1.set(7, i, section.acceleration);
+    if (i > i0) sheet1.set(7, i, section.acceleration);
     sheet1.set(8, i, section.name);
 
     ++i;
