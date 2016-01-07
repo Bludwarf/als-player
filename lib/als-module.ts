@@ -25,6 +25,12 @@ class ArrayClass<T> {
 //Adding Arrray to XArray prototype chain.
 ArrayClass["prototype"] = new ArrayClass();
 
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
 
 module als {
 
@@ -64,6 +70,20 @@ module als {
 
     function secTime(element) {
         return this.prop(element, 'secTime');
+    }
+
+    /**
+     * Conversion de secondes au format M:SS comme Ableton Live 8
+     * @param seconds
+     * @param withFrac affiche la partie fractionnaire des secondes
+     */
+    export function toMS(seconds : number, withFrac? : boolean) : string {
+        //var h = Math.floor(seconds / 3600);
+        //var m = Math.floor(seconds % 3600 / 60);
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        if (!withFrac) s = Math.round(s);
+        return /*pad(h, 2) + ':' +*/ m + ':' + pad(s, 2);
     }
 
     /**

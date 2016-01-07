@@ -7,7 +7,8 @@ var als = require('../lib/als-module');
 var dir = '../resources/Excel/';
 
 var argv = {
-    file: '../resources/Voyage-20151217.warpMarkers.json'
+    file: '../resources/Voyage-20151217.warpMarkers.json',
+    ms: true // format M:SS pour les durées
 };
 
 var liveSet = new als.LiveSet("Voyage-20151217", __dirname + "/../resources/Voyage-20151217.*.json");
@@ -46,9 +47,9 @@ liveSet.sections.forEach(function(section) {
 
     sheet1.set(1, i, section.beatTime); // TODO msexcel-fix : les 0 sont stockés comme cellule vide
     sheet1.set(2, i, section.beatTimeRelative);
-    sheet1.set(3, i, section.secTime);
+    sheet1.set(3, i, argv.ms ? als.toMS(section.secTime) : section.secTime);
     sheet1.set(4, i, section.beatDuration);
-    sheet1.set(5, i, section.secDuration);
+    sheet1.set(5, i, argv.ms ? als.toMS(section.secDuration) : section.secDuration);
     sheet1.set(6, i, section.tempo);
     //if (i > i0) sheet1.set(7, i, section.acceleration);
     sheet1.set(8, i, section.name);
