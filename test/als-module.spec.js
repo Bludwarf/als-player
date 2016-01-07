@@ -15,6 +15,31 @@ var res = __dirname + '/../resources';
 
 // TODO : charger les JSON puis lancer les tests
 
+describe('als', function() {
+
+    describe('#toMBX()', function() {
+
+        it('should get measure and beats', function() {
+            assert.equal(als.toMBX(0), '1.1.1');
+            assert.equal(als.toMBX(1), '1.2.1');
+            assert.equal(als.toMBX(2), '1.3.1');
+            assert.equal(als.toMBX(3), '1.4.1');
+            assert.equal(als.toMBX(4), '2.1.1');
+        });
+
+        it('should get sixteenth', function() {
+            assert.equal(als.toMBX(0),    '1.1.1');
+            assert.equal(als.toMBX(0.25), '1.1.2');
+            assert.equal(als.toMBX(0.5),  '1.1.3');
+            assert.equal(als.toMBX(0.75), '1.1.4');
+            assert.equal(als.toMBX(1),    '1.2.1');
+            assert.equal(als.toMBX(1.5),  '1.2.3');
+        });
+
+    });
+
+});
+
 describe('LiveSet', function() {
 
     describe('#constructor()', function () {

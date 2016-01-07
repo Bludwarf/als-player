@@ -87,6 +87,25 @@ module als {
     }
 
     /**
+     * BeatTime au format : mesure.beat.sixteenth TODO : sixteenth quand on est en ternaire ?
+     * En estimant qu'aucun changement de signature n'est eu lieu dans le morceau, sinon décalage du numéro de mesure.
+     * @param beatTime
+     * @param beatPerMeasure numérateur (chiffre du haut) de la signature
+     */
+    export function toMBX(beatTime : number, beatPerMeasure? : number) : string {
+        beatPerMeasure = beatPerMeasure || 4;
+        var m = Math.floor(beatTime / beatPerMeasure);
+        var b = Math.floor(beatTime % beatPerMeasure);
+        var x = beatTime % 1 * 4; // sixteenth = 1/4 beat
+
+        // Notation commençant à 1 et pas 0
+        ++m;
+        ++b;
+        ++x;
+        return m+"."+b+"."+x;
+    }
+
+    /**
      * Accélération en tenant compte de l'intervale entre les deux changement de tempo en bpm / battement  (c'est-à-dire en secondes ?)
      * @param tempo
      * @param prevTempo tempo précédent
