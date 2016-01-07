@@ -237,7 +237,7 @@ module als {
         public audioClips; // JSON
         public midiClips; // JSON
         public warpMarkers;
-        public locators : Array<any>; // JSON
+        public locators : Array<Locator>; // JSON
 
         private _sections : Array<Section>;
 
@@ -263,8 +263,35 @@ module als {
                 this.audioClips = jsonParts.audioClips;
                 this.midiClips = jsonParts.midiClips;
                 this.warpMarkers = new WarpMarkers(jsonParts.warpMarkers);
-                this.locators = jsonParts.locators;
+                this.locators = this.initElements(jsonParts.locators, function(json) {
+                    return new Locator(json);
+                });
             }
+        }
+
+        /**
+         * This callback type is called `requestCallback` and is displayed as a global symbol.
+         *
+         * @callback manualConstructor
+         * @param {number} responseCode
+         * @param {string} responseMessage
+         */
+
+        /**
+         *
+         * @param json
+         * @param manualConstructor {function}
+         * @returns Array
+         */
+        private initElements(json, manualConstructor) {
+            var elements;
+            if (json) {
+                elements = [];
+                json.forEach(function(element) {
+                    elements.push(manualConstructor(element));
+                });
+            }
+            return elements;
         }
 
         get sections() : Array<Section> {
@@ -729,7 +756,7 @@ module als {
         }
 
         /**
-         * Le repère placé exactement au début de cette section s'il y en a un
+         * Le repère dans lequel on se trouve actuellement
          */
         get locator() : any {
             return this.parent.locatorAt(this.beatTime);
@@ -967,6 +994,34 @@ module als {
             return this.secTime + (beatTime - this.beatTime) * this.beatValue;
         }
 
+    }
+
+    /**
+     * <Locator>
+         <Time Value="16" />
+         <Name Value="Tchouchou" />
+         <Annotation Value="" />
+         <IsSongStart Value="false" />
+       </Locator>
+     */
+    export class Locator {
+
+        public _json : any;
+
+        /**
+         * @param object JSON
+         */
+        constructor(object) {
+            this._json = object;
+        }
+
+        get name() {
+            return this._json.Name[0].$.Value;
+        }
+
+        get time() {
+            return parseFloat(this._json.Time[0].$.Value);
+        }
     }
 
 }

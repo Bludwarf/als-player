@@ -143,7 +143,7 @@ describe('LiveSet', function() {
             assert.notEqual(liveSet.locators, null);
             assert.equal(liveSet.locators.length, 1);
             var locator = liveSet.locators[0];
-            assert.equal(locator.Name[0].$.Value, "Tchouchou");
+            assert.equal(locator.name, "Tchouchou");
         });
     });
 
@@ -261,6 +261,22 @@ describe('Section', function() {
             assert.equal(first.measures.length, 4);
             assert.notEqual(last.measures, null);
             assert.equal(last.measures.length, 3);
+        });
+
+    });
+
+});
+
+describe('Locator', function() {
+
+    var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+    var locators = liveSet.locators;
+    var first = locators[0];
+
+    describe('#time', function() {
+
+        it('should be good', function() {
+            assert.equal(first.time, 16);
         });
 
     });

@@ -57,7 +57,7 @@ liveSet.sections.forEach(function(section) {
     sheet1.set(6, i, section.tempo);
     if (i > i0) sheet1.set(7, i, section.acceleration);
     sheet1.set(8, i, section.name);
-    if (section.locator) sheet1.set(cols.locator, i, section.locator);
+    if (section.locator && section.locator.time == section.beatTime) sheet1.set(cols.locator, i, section.locator.name); // uniquement la 1ère section du repère
 
     ++i;
 });
