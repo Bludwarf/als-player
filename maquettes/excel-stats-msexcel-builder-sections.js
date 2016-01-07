@@ -30,9 +30,10 @@ sheet1.set(1, 1, "BeatTime");
 sheet1.set(2, 1, "WarpMarker");
 sheet1.set(3, 1, "SecTime");
 sheet1.set(4, 1, "BeatDuration");
-sheet1.set(5, 1, "Tempo");
-sheet1.set(6, 1, "Accélération");
-sheet1.set(7, 1, "Section");
+sheet1.set(5, 1, "SecDuration");
+sheet1.set(6, 1, "Tempo");
+sheet1.set(7, 1, "Accélération");
+sheet1.set(8, 1, "Section");
 
 // Test Excel
 var i0 = 2;
@@ -47,9 +48,10 @@ liveSet.sections.forEach(function(section) {
     sheet1.set(2, i, section.beatTimeRelative);
     sheet1.set(3, i, section.secTime);
     sheet1.set(4, i, section.beatDuration);
-    sheet1.set(5, i, section.tempo);
-    //if (i > i0) sheet1.set(6, i, section.acceleration);
-    sheet1.set(7, i, section.name);
+    sheet1.set(5, i, section.secDuration);
+    sheet1.set(6, i, section.tempo);
+    //if (i > i0) sheet1.set(7, i, section.acceleration);
+    sheet1.set(8, i, section.name);
 
     ++i;
 });

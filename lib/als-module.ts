@@ -536,6 +536,12 @@ module als {
             return this.currentEnd - this.currentStart;
         }
 
+        get secDuration() : number {
+            var secStart = this.secTimeAt(this.currentStart);
+            var secEnd   = this.secTimeAt(this.currentEnd);
+            return secEnd - secStart;
+        }
+
         /**
          * Pour l'instant considère uniquement du 4/4
          * @returns {Array<Measure>}
@@ -625,13 +631,11 @@ module als {
         }
 
         /**
-         * Tempo moyen (pondéré) recalculé à chaque appel
+         * Tempo moyen
          * @returns {number}
          */
         get tempo() : number {
-            var currentStart = this.currentStartRelative;
-            var currentEnd = this.currentEndRelative;
-            return this.parent.warpMarkers.tempo_between(currentStart, currentEnd);
+            return this.beatDuration / this.secDuration * 60;
         }
 
         get style() {
@@ -735,7 +739,7 @@ module als {
          * @returns {number}
          */
         public tempo_between(start : number, end : number) : number {
-            var m = this.warpMarkerAt(start);
+            var m = this.warpMarkerAt({beatTime: start});
 
             // Tempo pondéré
             var tempoMoyen = 0;
@@ -765,11 +769,11 @@ module als {
 
         /**
          *
-         * @param beatTime relatif à l'AudioClip de référence
+         * @param filter {{[beatTime]: number, [secTime]: number}} relatifs à l'AudioClip de référence
          * @returns {number}
          */
-        public warpMarkerAt(beatTime : number) : WarpMarker {
-            return elementAt(this, {beatTime : beatTime});
+        public warpMarkerAt(filter : any) : WarpMarker {
+            return elementAt(this, filter);
         }
 
         /**
@@ -778,7 +782,7 @@ module als {
          * @returns {number}
          */
         public secTimeAt(beatTime : number) : number {
-            var warpMarker = this.warpMarkerAt(beatTime);
+            var warpMarker = this.warpMarkerAt({beatTime: beatTime});
             return warpMarker.secTimeAt(beatTime);
         }
 

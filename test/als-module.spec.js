@@ -199,12 +199,12 @@ describe('Section', function() {
     describe('#tempo', function () {
 
         it('should be good when exact fit with WarpMarkers', function () {
-            assert.equal(first.tempo.toFixed(8), 68.45895447);
+            assert.equal(first.tempo.toFixed(8), 68.45213072);
         });
 
         it('should be good when starts between WarpMarkers ', function () {
             console.log("end:"+prevLast.currentEnd);
-            assert.equal(prevLast.tempo.toFixed(8), 69.44493276);
+            assert.equal(prevLast.tempo.toFixed(8), 69.43856714);
         });
 
     });
