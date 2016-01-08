@@ -35,8 +35,8 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	var liveSet = new als.LiveSet('Voyage-20151217');
 	liveSet.loadLocalJsonParts();
 
-	// Section Refrain 1ère
-	var section = liveSet.sections[10];
+	// Pattern Refrain 1
+	var section = liveSet.patterns[10];
 
 	// Bouchon pour les chords
 	section.measures[0].chord = 'A';

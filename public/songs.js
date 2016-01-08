@@ -10,7 +10,7 @@ var songs = [
         /*structure : {
             secDuration: 215,
             beatDuration: 544,
-            sections: [
+            patterns: [
                 {
                     secTime: 0,
                     beatTime: 0,
@@ -127,8 +127,8 @@ for (var i = 0; i < songs.length; ++i) {
         // Sections
         var sections = [];
         structure.sections = sections;
-        for (var s = 0; s < set.sections.length; ++s) {
-            var sectionLive = set.sections[s];
+        for (var s = 0; s < set.patterns.length; ++s) {
+            var sectionLive = set.patterns[s];
             var section = {
                 secTime: sectionLive.secTime,
                 beatTime: sectionLive.beatTime,

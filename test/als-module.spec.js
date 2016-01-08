@@ -55,39 +55,39 @@ describe('LiveSet', function() {
         });
     });
 
-    describe('#sections', function () {
+    describe('#patterns', function () {
 
         it('Voyage', function () {
             var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
-            assert.notEqual(liveSet.sections, null);
-            assert.equal(liveSet.sections.length, 27);
-            assert.notEqual(liveSet.sections[0], null);
-            assert.notEqual(liveSet.sections[liveSet.sections.length - 1], null);
+            assert.notEqual(liveSet.patterns, null);
+            assert.equal(liveSet.patterns.length, 27);
+            assert.notEqual(liveSet.patterns[0], null);
+            assert.notEqual(liveSet.patterns[liveSet.patterns.length - 1], null);
         });
     });
 
-    describe('#sectionAt', function () {
+    describe('#patternAt', function () {
 
         it('Mini Refrain', function () {
             var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
-            var section = liveSet.sectionAt(96); // 80 en relatif mais 96 en absolu on trouve le début de "Mini Refrain"
-            assert.equal(section.name, "Mini Refrain");
+            var pattern = liveSet.patternAt(96); // 80 en relatif mais 96 en absolu on trouve le début de "Mini Refrain"
+            assert.equal(pattern.name, "Mini Refrain");
 
             // idem en 96.1 jusqu'à 99.9
-            assert.equal(liveSet.sectionAt(96.1), section);
-            assert.equal(liveSet.sectionAt(97), section);
-            assert.equal(liveSet.sectionAt(98), section);
-            assert.equal(liveSet.sectionAt(99), section);
-            assert.equal(liveSet.sectionAt(99.9), section);
+            assert.equal(liveSet.patternAt(96.1), pattern);
+            assert.equal(liveSet.patternAt(97), pattern);
+            assert.equal(liveSet.patternAt(98), pattern);
+            assert.equal(liveSet.patternAt(99), pattern);
+            assert.equal(liveSet.patternAt(99.9), pattern);
 
             // juste avant : "Couplet" et après
-            assert.equal(liveSet.sectionAt(95).name, "Couplet");
-            assert.equal(liveSet.sectionAt(108).name, "Couplet");
+            assert.equal(liveSet.patternAt(95).name, "Couplet");
+            assert.equal(liveSet.patternAt(108).name, "Couplet");
 
             // TODO : tester répétition => même nom mais objet différent
 
             // Renvoyait une erreur
-            assert.notEqual(liveSet.sectionAt(512), null);
+            assert.notEqual(liveSet.patternAt(512), null);
         });
     });
 
@@ -152,14 +152,14 @@ describe('LiveSet', function() {
 
 });
 
-describe('Section', function() {
+describe('Pattern', function() {
 
     var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
-    var sections = liveSet.sections;
-    var first = sections[0];
-    var second = sections[1];
-    var prevLast = sections[sections.length - 2];
-    var last = sections[sections.length - 1];
+    var patterns = liveSet.patterns;
+    var first = patterns[0];
+    var second = patterns[1];
+    var prevLast = patterns[patterns.length - 2];
+    var last = patterns[patterns.length - 1];
 
     describe('#name', function () {
 

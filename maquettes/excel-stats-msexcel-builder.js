@@ -33,8 +33,8 @@ als.WarpMarkers.load(argv.file, function(err, warpMarkers) {
     sheet1.set(3, 1, "BeatDuration");
     sheet1.set(4, 1, "Tempo");
     sheet1.set(5, 1, "Accélération");
-    sheet1.set(6, 1, "Section");
-    sheet1.set(7, 1, "BeatTime"); // BeatTime dans la Section
+    sheet1.set(6, 1, "Pattern");
+    sheet1.set(7, 1, "BeatTime"); // BeatTime dans le Pattern
 
     // Test Excel
     var i0 = 2;
@@ -54,9 +54,9 @@ als.WarpMarkers.load(argv.file, function(err, warpMarkers) {
             sheet1.set(4, i, m.tempo);
             if (i > i0) sheet1.set(5, i, m.acceleration);
 
-            // Section
+            // Pattern
             console.log(absBeatTime);
-            var section = liveSet.sectionAt(absBeatTime);
+            var section = liveSet.patternAt(absBeatTime);
             if (section) {
                 sheet1.set(6, i, section.name ? section.name : '?');
                 sheet1.set(7, i, absBeatTime - section.beatTime);

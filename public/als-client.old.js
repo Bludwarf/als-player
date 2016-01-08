@@ -80,7 +80,7 @@ als.Set = function(name, jsonParts) {
     this.midiClips = jsonParts.midiClips;
     this.warpMarkers = jsonParts.warpMarkers;
 
-    // Création des sections à partir des audioClips (ou des midiClips si présents)
+    // Création des patterns à partir des audioClips (ou des midiClips si présents)
     this.sections = [];
     var clips = this.midiClips || this.audioClips;
     for (var i = 0; i < clips.length; ++i) {
@@ -144,8 +144,8 @@ Object.defineProperties(als.Set.prototype, {
      */
     beatDuration: {
         get: function() {
-            var first = this.sections[0];
-            var last  = this.sections[this.sections.length - 1];
+            var first = this.patterns[0];
+            var last  = this.patterns[this.patterns.length - 1];
             return last.currentEnd - first.currentStart;
         }
     },
@@ -155,8 +155,8 @@ Object.defineProperties(als.Set.prototype, {
      */
     secDuration: {
         get: function() {
-            var first = this.sections[0];
-            var last  = this.sections[this.sections.length - 1];
+            var first = this.patterns[0];
+            var last  = this.patterns[this.patterns.length - 1];
             return last.secTimeAt(last.currentEnd) - first.secTimeAt(first.currentStart);
         }
     },
@@ -237,7 +237,7 @@ als.Set.prototype.measureAt = function(query) {
 /**
  *
  * @param beatTime
- * @returns {als.Section}
+ * @returns {als.Pattern}
  */
 als.Set.prototype.sectionAt = function(beatTime) {
     var sections = this.sections;
@@ -279,7 +279,7 @@ als.Set.prototype.sectionAt = function(beatTime) {
 /**
  *
  * @param secTime {float}
- * @returns {als.Section}
+ * @returns {als.Pattern}
  */
 als.Set.prototype.sectionAtSecTime = function(secTime) {
     return als.elementAt(this.sections, {secTime: secTime});
@@ -293,7 +293,7 @@ als.Set.prototype.sectionAtSecTime = function(secTime) {
  * @returns {Number}
  */
 als.secTime = function(beatTime) {
-    var section = als.sectionAt(beatTime);
+    var section = als.patternAt(beatTime);
     return section.secTimeAt(beatTime);
 };
 
@@ -357,8 +357,8 @@ Object.defineProperties(als.Section.prototype, {
     next: {
         get: function() {
             var parent = this.parent;
-            if (!parent || !parent.sections || this.index >= parent.sections.length) return null;
-            return parent.sections[this.index + 1];
+            if (!parent || !parent.patterns || this.index >= parent.patterns.length) return null;
+            return parent.patterns[this.index + 1];
         }
     },
 
@@ -392,12 +392,12 @@ Object.defineProperties(als.Section.prototype, {
                     Object.defineProperties(measure, {
                         beatTime: {
                             get: function() {
-                                return this.section.beatTime + this.index * 4;
+                                return this.pattern.beatTime + this.index * 4;
                             }
                         },
                         secTime: {
                             get: function() {
-                                return this.section.secTimeAt(this.beatTime);
+                                return this.pattern.secTimeAt(this.beatTime);
                             }
                         }
                         /*beatDuration: {

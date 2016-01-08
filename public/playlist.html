@@ -33,7 +33,7 @@
 			<div class="Track">
 				<div class="AudioClips">
 
-					<div  ng-repeat="section in song.structure.sections" id="Section-{{section.index}}" class="AudioClip AudioClip-48" ng-style="section.style">
+					<div  ng-repeat="section in song.structure.patterns" id="Section-{{section.index}}" class="AudioClip AudioClip-48" ng-style="section.style">
 						<div class="Header" ng-click="section.play()">
 							<div class="Name" ng-class="['Color-'+section.color]">
 								{{section.name}}

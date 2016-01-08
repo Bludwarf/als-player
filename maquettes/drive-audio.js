@@ -268,8 +268,8 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 				Object.defineProperty(section, 'next', {
 					get: function() {
 						var parent = this.parent;
-						if (!parent || !parent.sections || this.index >= parent.sections.length) return null;
-						return parent.sections[this.index + 1];
+						if (!parent || !parent.patterns || this.index >= parent.patterns.length) return null;
+						return parent.patterns[this.index + 1];
 					}
 				});
 

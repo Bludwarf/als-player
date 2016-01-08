@@ -2,7 +2,7 @@ var fs = require('fs');
 var yargs = require('yargs');
 var excelbuilder = require('msexcel-builder-colorfix-intfix');
 
-var als = require('../lib/als-module');
+var als = require('../lib/als');
 
 var dir = '../resources/Excel/';
 
@@ -14,10 +14,10 @@ var argv = {
 var liveSet = new als.LiveSet("Voyage-20151217", __dirname + "/../resources/Voyage-20151217.*.json");
 
 // Create a new workbook file in current working-path
-var workbook = excelbuilder.createWorkbook(dir, 'sample-sections.xlsx');
+var workbook = excelbuilder.createWorkbook(dir, 'sample-patterns.xlsx');
 
 // Create a new worksheet with 10 columns and 12 rows
-var sheet1 = workbook.createSheet('sheet1', 10, liveSet.sections.length + 1);
+var sheet1 = workbook.createSheet('sheet1', 10, liveSet.patterns.length + 1);
 
 // Fill some data
 /*
@@ -37,14 +37,14 @@ sheet1.set(4, 1, "BeatDuration");
 sheet1.set(5, 1, "SecDuration");
 sheet1.set(6, 1, "Tempo");
 sheet1.set(7, 1, "Accélération");
-sheet1.set(8, 1, "Section");
+sheet1.set(8, 1, "Pattern");
 sheet1.set(cols.locator, 1, "Repère");
 
 // Test Excel
 var i0 = 2;
 var i = i0;
 var iSection = 0;
-liveSet.sections.forEach(function(section) {
+liveSet.patterns.forEach(function(section) {
 
     // On ne prend pas en compte avant le 1er beat
     if (section.beatTime < 0) return;

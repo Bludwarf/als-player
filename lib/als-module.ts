@@ -164,7 +164,7 @@ module als {
         public warpMarkers;
         public locators : Array<Locator>; // JSON
 
-        private _sections : Array<Section>;
+        private _patterns : Array<Pattern>;
 
         private _file : string;
 
@@ -210,39 +210,39 @@ module als {
             return elements;
         }
 
-        get sections() : Array<Section> {
-            if (!this._sections) {
-                // Création des sections à partir des audioClips (ou des midiClips si présents)
+        get patterns() : Array<Pattern> {
+            if (!this._patterns) {
+                // Création des patterns à partir des audioClips (ou des midiClips si présents)
                 var clips = this.midiClips || this.audioClips;
                 if (clips) {
-                    this._sections = [];
+                    this._patterns = [];
                     for (var i = 0; i < clips.length; ++i) {
-                        var section = new Section(this, i);
-                        this._sections.push(section);
+                        var pattern = new Pattern(this, i);
+                        this._patterns.push(pattern);
                     }
                 }
                 else {
                     console.warn("Aucun clip trouvé pour ce morceau");
                 }
             }
-            return this._sections;
+            return this._patterns;
         }
 
         /**
-         * @returns {Number} Diff entre le début de la 1ère section et la fin de la dernière (en beat)
+         * @returns {Number} Diff entre le début du 1er pattern et la fin du dernier (en beat)
          */
         get beatDuration() : number {
-            var first = this.sections[0];
-            var last  = this.sections[this.sections.length - 1];
+            var first = this.patterns[0];
+            var last  = this.patterns[this.patterns.length - 1];
             return last.currentEnd - first.currentStart;
         }
 
         /**
-         * @returns {Number} Diff entre le début de la 1ère section et la fin de la dernière (en secondes)
+         * @returns {Number} Diff entre le début du 1er pattern et la fin du dernier (en secondes)
          */
         get secDuration() : number {
-            var first = this.sections[0];
-            var last  = this.sections[this.sections.length - 1];
+            var first = this.patterns[0];
+            var last  = this.patterns[this.patterns.length - 1];
             return last.secTimeAt(last.currentEnd) - first.secTimeAt(first.currentStart);
         }
 
@@ -251,17 +251,17 @@ module als {
          }*/
 
         measureAt(query) : Measure {
-            var section = (typeof query.beatTime != 'undefined') ? this.sectionAt(query.beatTime) : this.sectionAtSecTime(query.secTime);
-            return section.measureAt(query);
+            var pattern = (typeof query.beatTime != 'undefined') ? this.patternAt(query.beatTime) : this.patternAtSecTime(query.secTime);
+            return pattern.measureAt(query);
         }
 
         /**
          *
          * @param secTime (float)
-         * @returns {Section}
+         * @returns {Pattern}
          */
-        sectionAtSecTime(secTime : number) : Section {
-            return elementAt(this.sections, {secTime: secTime});
+        patternAtSecTime(secTime : number) : Pattern {
+            return elementAt(this.patterns, {secTime: secTime});
         }
 
 
@@ -310,56 +310,56 @@ module als {
         /**
          *
          * @param beatTime absolu dans le SetLive et pas relatif comme dans les WarpMarkers
-         * @returns {Section}
+         * @returns {Pattern}
          */
-        sectionAt(beatTime : number) : Section {
-            var sections = this.sections;
+        patternAt(beatTime : number) : Pattern {
+            var patterns = this.patterns;
 
-            if (sections) {
-                // Supérieur au début de la dernière section ?
-                var last = sections[sections.length - 1];
+            if (patterns) {
+                // Supérieur au début du premier Pattern ?
+                var last = patterns[patterns.length - 1];
                 if (beatTime >= last.currentEnd) {
-                    console.warn(beatTime + ' Supérieur ou égal à la fin de la dernière section de ' + this.name);
+                    console.warn(beatTime + ' Supérieur ou égal à la fin du dernier pattern de ' + this.name);
                     return null;
                 }
                 if (beatTime >= last.currentStart) return last;
 
-                var sectionBefore, sectionAfter;
-                for (var i = 0; i < sections.length; ++i) {
-                    var section = sections[i];
+                var patternBefore, patternAfter;
+                for (var i = 0; i < patterns.length; ++i) {
+                    var pattern = patterns[i];
 
-                    if (section.beatTime < beatTime) continue;
+                    if (pattern.beatTime < beatTime) continue;
 
                     // BeatTime supérieur
-                    if (section.beatTime > beatTime) {
-                        sectionAfter = section;
-                        if (section.beatTime === beatTime) {
-                            sectionBefore = section;
+                    if (pattern.beatTime > beatTime) {
+                        patternAfter = pattern;
+                        if (pattern.beatTime === beatTime) {
+                            patternBefore = pattern;
                         }
                         else {
                             if (i == 0) {
-                                console.error('Impossible de trouver getSectionAt(' + beatTime + ') avant la première section');
+                                console.error('Impossible de trouver getPatternAt(' + beatTime + ') avant le premier pattern');
                                 return null;
                             }
-                            sectionBefore = sections[i - 1];
+                            patternBefore = patterns[i - 1];
                         }
 
-                        return sectionBefore;
+                        return patternBefore;
                     }
 
                     // BeatTime connu
                     else {
-                        return section;
+                        return pattern;
                     }
                 }
             }
 
-            throw new Error('sectionAt(' + beatTime + ') non implémenté pour le morceau ' + this.name);
+            throw new Error('patternAt(' + beatTime + ') non implémenté pour le morceau ' + this.name);
         }
 
-        sectionAt_WarpMarker(m : WarpMarker) : Section {
+        patternAt_WarpMarker(m : WarpMarker) : Pattern {
             throw new Error('@deprecated : on doit calculer le beatTime absolu en connaissant le Set dont sont extraits ces WarpMarkers');
-            //return this.sectionAt(m.beatTime);
+            //return this.patternAt(m.beatTime);
         }
 
         /**
@@ -421,8 +421,6 @@ module als {
             return this._file;
         }
 
-        // TODO : faire un méthode set.findSection({beatTime: 60}) ou set.findSection({secTime: 159.65984})
-
         /**
          * Début réel de l'audio de référence
          */
@@ -446,7 +444,7 @@ module als {
     /**
      * Relativement à une structure qui se base un clip audio de référence
      */
-    export class Section {
+    export class Pattern {
 
         /**
          * @type {Set}
@@ -460,7 +458,7 @@ module als {
 
         constructor(set : LiveSet, index : number) {
             this.set = set;
-            if (typeof index === 'undefined') throw new Error('Impossible de créer une section sans index');
+            if (typeof index === 'undefined') throw new Error('Impossible de créer un pattern sans index');
             this.index = index;
             this.json = this.set.midiClips ? this.set.midiClips[index] : this.set.audioClips[index];
             this.isAudio = !(this.set.midiClips);
@@ -474,7 +472,7 @@ module als {
         }
 
         /**
-         * Inclusif (ce beat fait partie de la section, c'est le 1er)
+         * Inclusif (ce beat fait partie du pattern, c'est le 1er)
          * <CurrentStart Value="96" />
          */
         get currentStart() : number {
@@ -482,7 +480,7 @@ module als {
         }
 
         /**
-         * Exclusif (ce beat ne fait pas partie de la section mais c'est le 1er de la section suivante)
+         * Exclusif (ce beat ne fait pas partie du pattern mais c'est le 1er du pattern suivant)
          * <CurrentEnd Value="128" />
          */
         get currentEnd() : number {
@@ -494,7 +492,7 @@ module als {
         }
 
         /**
-         * Relatif à la première Section
+         * Relatif au premier Pattern
          * @param beatTime
          * @returns {number}
          */
@@ -536,16 +534,16 @@ module als {
             return parseInt(this.json.ColorIndex[0].$.Value);
         }
 
-        get next() : Section {
+        get next() : Pattern {
             var parent = this.parent;
-            if (!parent || !parent.sections || this.index >= parent.sections.length) return null;
-            return parent.sections[this.index + 1];
+            if (!parent || !parent.patterns || this.index >= parent.patterns.length) return null;
+            return parent.patterns[this.index + 1];
         }
 
-        get prev() : Section {
+        get prev() : Pattern {
             var parent = this.parent;
-            if (!parent || !parent.sections || this.index <= 0) return null;
-            return parent.sections[this.index - 1];
+            if (!parent || !parent.patterns || this.index <= 0) return null;
+            return parent.patterns[this.index - 1];
         }
 
         get beatDuration() : number {
@@ -566,7 +564,7 @@ module als {
             var measures = this._measures;
             if (!measures) {
                 var lastIncomplete = this.beatDuration % 4 != 0;
-                if (lastIncomplete) console.warn('Nombre de battement non multiple de 4 pour la section %s', this.name);
+                if (lastIncomplete) console.warn('Nombre de battement non multiple de 4 pour la pattern %s', this.name);
 
                 var n = Math.ceil(this.beatDuration / 4);
                 measures = new Array(n);
@@ -584,20 +582,20 @@ module als {
                     Object.defineProperties(measure, {
                         beatTime: {
                             get: function() {
-                                return this.section.beatTime + this.index * 4;
+                                return this.pattern.beatTime + this.index * 4;
                             }
                         },
                         secTime: {
                             get: function() {
                                 throw new Error('TODO de compilation TypeScript');
-                                // TODO  : return this.section.secTimeAt(this.beatTime);
+                                // TODO  : return this.pattern.secTimeAt(this.beatTime);
                             }
                         }
                         /*beatDuration: {
                          get: function() {
-                         var n = this.section.measures.length;
+                         var n = this.pattern.measures.length;
                          if (this.index < n - 1) return 4;
-                         else return this.section.beatDuration - (n - 1) * 4; // durée totale - toutes les autres
+                         else return this.pattern.beatDuration - (n - 1) * 4; // durée totale - toutes les autres
                          }
                          }*/
                     });
@@ -655,7 +653,7 @@ module als {
         }
 
         /**
-         * Accélération par rapport à la précédente Section en bpm / battement (c'est-à-dire en secondes ?)
+         * Accélération par rapport au précédent Pattern en bpm / battement (c'est-à-dire en secondes ?)
          * @returns {number}
          */
         get acceleration() : number {
@@ -682,13 +680,13 @@ module als {
 
     export class Measure {
         public incomplete : boolean;
-        public section : Section;
+        public pattern : Pattern;
         public index : number;
         public beatDuration : number;
         public style; // CSS
 
-        constructor(section, index, beatDuration) {
-            this.section = section;
+        constructor(pattern, index, beatDuration) {
+            this.pattern = pattern;
             this.index = index;
             this.beatDuration = beatDuration;
         }

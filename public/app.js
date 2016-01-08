@@ -114,7 +114,7 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 			if (!structure) return;
 
 			//console.log('action');
-			var section = song.als.sectionAtSecTime(that.currentTime);
+			var section = song.als.patternAtSecTime(that.currentTime);
 
 			if ($scope.currentSection != section) {
 				$scope.currentSection = section;
