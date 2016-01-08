@@ -917,6 +917,27 @@ module als {
             return this.patterns.push(pattern);
         }
 
+        private propOfFirstChild(propName : string) : any {
+            if (!this.patterns || !this.patterns.length) return null;
+            return this.patterns[0][propName];
+        }
+
+        /**
+         * colorIndex du 1er pattern
+         * @returns {any}
+         */
+        get colorIndex() {
+            return this.propOfFirstChild('colorIndex');
+        }
+
+        /**
+         * name du 1er pattern
+         * @returns {any}
+         */
+        get name() {
+            return this.propOfFirstChild('name');
+        }
+
     }
 
     /**

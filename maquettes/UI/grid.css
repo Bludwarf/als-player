@@ -18,6 +18,13 @@
     text-align: center;
 }
 
-.measure-container {
+.pattern {
+    /*clear: both;*/
+    margin: 2mm 2mm;
+    float: left;
+    border: solid 1px black;
+}
+
+.section {
     clear: both;
 }

@@ -45,14 +45,18 @@
 		<!-- Ligne dans la grille -->
 		<div>
 
-			<div class="measure-container" ng-repeat="section in liveSet.patterns">
+			<div class="section" ng-repeat="section in liveSet.sections">
 
-				<div style="min-height: 1cm; width: 2cm; float: left">
+				<div style="min-height: 1cm; width: 2cm; float: left; margin: 2mm">
 					{{section.name}}
 				</div>
 
-				<div class="measure Color-{{section.colorIndex}}" ng-repeat="measure in section.measures">
-					<span class="chord">{{measure.chord}}</span>
+				<div class="pattern" ng-repeat="pattern in section.patterns" ng-style="{'border-color': pattern.colorIndex}">
+
+					<div class="measure Color-{{pattern.colorIndex}}" ng-repeat="measure in pattern.measures">
+						<span class="chord">{{measure.chord}}</span>
+					</div>
+
 				</div>
 
 			</div>

@@ -129,7 +129,7 @@ for (var i = 0; i < songs.length; ++i) {
         structure.sections = sections;
         for (var s = 0; s < set.patterns.length; ++s) {
             var sectionLive = set.patterns[s];
-            var section = {
+            var pattern = {
                 secTime: sectionLive.secTime,
                 beatTime: sectionLive.beatTime,
                 color: sectionLive.colorIndex,
@@ -140,7 +140,7 @@ for (var i = 0; i < songs.length; ++i) {
 
             // measures
             (function(sectionLive) {
-                Object.defineProperty(section, 'measures', {
+                Object.defineProperty(pattern, 'measures', {
                     get: function() {
                         var measures = sectionLive.measures;
 
@@ -169,7 +169,7 @@ for (var i = 0; i < songs.length; ++i) {
                 });
             })(sectionLive);
 
-            sections.push(section);
+            sections.push(pattern);
         }
     }
 }
