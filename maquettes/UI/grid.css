@@ -1,0 +1,23 @@
+.measure {
+    border: solid 1px white;
+    background: rgba(203, 203, 203, 1);
+    float: left;
+    min-height: 1cm;
+    min-width: 1cm;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.measure .chord {
+    margin: 0;
+    display: block;
+
+    /* http://www.alsacreations.com/tuto/lire/1032-comment-centrer-verticalement-sur-tous-les-navigateurs.html */
+    height: 1cm;
+    line-height: 1cm;
+    text-align: center;
+}
+
+.measure-container {
+    clear: both;
+}

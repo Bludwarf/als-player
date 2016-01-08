@@ -1,11 +1,11 @@
 /**
  * Created by mlavigne on 30/12/2015.
+ * Tout doit être fait comme si on était côté client.
  */
 ///<reference path='../typings/tsd.d.ts'/>
-import utils = require('./utils');
-import fs = require("fs");
+
+// Import uniquement de bibliothèque qui existent côté client
 import _ = require("underscore");
-import async = require("async");
 
 /**
  * a dummy class it to inherite array.
@@ -46,7 +46,7 @@ module als {
     }
 
     var RELATIVE_PATH_ROOT = '/Users/bludwarf/Dropbox/Musiques/Funk Pierre/Sets Live';
-    var navigator_isMac = false; // FIXME
+    var navigator_isMac = false; // FIXME : this['navigator'] && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('macintosh') != -1;
     var pathMatcher : PathMatcher = null;
 
     /**
@@ -154,81 +154,6 @@ module als {
     }
 
     /**
-     * Charge plusieurs fichiers JSON et renvoie le résultat de manière synchrone.
-     *
-     * Exemple :
-     *
-     * var voyageJsonParts = als.loadJsonParts({
-            audioClips:  dir + "/Voyage-20151217.small.audioClips.json",
-            midiClips:   dir + "/Voyage-20151217.midiClips.json",
-            warpMarkers: dir + "/Voyage-20151217.warpMarkers.json"
-        });
-
-       Exemple avec syntaxe en motif :
-
-       var voyageJsonParts = als.loadJsonParts(dir + "/Voyage-20151217.*.json");
-
-     *
-     * @param jsonFiles {{audioClips, midiClips, warpMarkers}} cf als.split ou syntaxe '.../MonFichier.*.json' pour chercher automatiquement tous les fichiers
-     * @returns {{audioClips, midiClips, warpMarkers}}
-     */
-    export function loadJsonParts(jsonFiles) {
-
-        // Syntax '.../Voyage-20151217.*.json' ?
-        if (typeof jsonFiles === 'string' && jsonFiles.indexOf('*') != -1) {
-            var partNames = [
-                'audioClips',
-                'midiClips',
-                'warpMarkers',
-                'locators'
-            ];
-            var partFilenames = {
-                audioClips:  "small.audioClips",
-                midiClips:   "midiClips",
-                warpMarkers: "warpMarkers",
-                locators: "locators"
-            };
-            var pattern = jsonFiles;
-            jsonFiles = {};
-            partNames.forEach(function(partName) {
-                jsonFiles[partName] = pattern.replace('*', partFilenames[partName]);
-            });
-        }
-
-        // tasks
-        var jsonParts;
-        var tasks : any = {};
-
-        for (var partName in jsonFiles) {
-            (function(partName) {
-                var file = jsonFiles[partName];
-                if (fs.existsSync(file)) {
-                    tasks[partName] = function (cb) {
-                        utils.readJsonFile(file, cb);
-                    }
-                }
-                else {
-                    console.warn("On ne peut pas charger le fichier "+file+" car il n'existe pas");
-                }
-            })(partName);
-        }
-
-        // Async
-        async.parallel(tasks,
-            function(err, results) {
-                if (err) throw err;
-                jsonParts = results;
-            });
-
-        // Wait with deasync
-        while(jsonParts === undefined) {
-            require('deasync').runLoopOnce();
-        }
-
-        return jsonParts;
-    }
-
-    /**
      * Set Live à partir de fragments JSON du fichier .als d'origine converti par als-player/lib/als.js
      */
     export class LiveSet {
@@ -253,20 +178,11 @@ module als {
             if (!name) throw new Error('name obligatoire');
             this.name = name;
 
-            if (jsonParts) {
-                // Syntax '.../Voyage-20151217.*.json' ?
-                if (typeof jsonParts === 'string' && jsonParts.indexOf('*') != -1) {
-                    var jsonFiles = jsonParts;
-                    jsonParts = loadJsonParts(jsonFiles);
-                }
+            if (jsonParts) this.loadJsonParts(jsonParts);
+        }
 
-                this.audioClips = jsonParts.audioClips;
-                this.midiClips = jsonParts.midiClips;
-                this.warpMarkers = new WarpMarkers(jsonParts.warpMarkers);
-                this.locators = this.initElements(jsonParts.locators, function(json) {
-                    return new Locator(json);
-                });
-            }
+        public loadJsonParts(jsonParts) {
+            throw new Error("Doit être implémenté de manière différenete côté Serveur et côté Client");
         }
 
         /**
@@ -793,19 +709,6 @@ module als {
             }
         }
 
-        /**
-         * Charge un fichier *.warpMarkers.json
-         * @param file fichier JSON converti de XML vers JSON par als.js#xml2json() (via zlib et xml2js 0.4.15) à partir d'un fichier *.als
-         * @param cb 2e arg = WarpMarkers
-         */
-        public static load(file:string, cb?: (err : Error, warpMarkers ?: WarpMarkers) => void) {
-            utils.readJsonFile(file, function (err, json) {
-                if (err) return cb(err);
-                if (json) return cb(null, new als.WarpMarkers(json));
-                return cb(new Error("Aucun WarpMarkers chargés depuis " + file));
-            });
-        }
-
         push(warpMarker : WarpMarker) {
 
             // lien next/prev
@@ -924,19 +827,6 @@ module als {
             var attribs = object.$ || object;
             this.secTime  = parseFloat(attribs.SecTime);
             this.beatTime = parseFloat(attribs.BeatTime);
-        }
-
-        /**
-         * Charge un fichier *.warpMarkers.json
-         * @param file fichier JSON converti de XML vers JSON par als.js#xml2json() (via zlib et xml2js 0.4.15) à partir d'un fichier *.als
-         * @param cb
-         */
-        public static load(file:string, cb:Function) {
-            utils.readJsonFile(file, function (err, warpMarkers) {
-                if (err) throw err;
-                if (warpMarkers) return cb(null, warpMarkers);
-                throw new Error("Aucun warpMarkers chargés depuis " + file);
-            });
         }
 
         /**

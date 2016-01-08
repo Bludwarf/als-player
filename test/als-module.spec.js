@@ -3,7 +3,7 @@ var assert = require('assert');
 /*var async = require('async');
 var deasync = require('deasync');
 var utils = require('../lib/utils.js');*/
-var als = require('../lib/als-module.js');
+var als = require('../lib/als.js');
 
 var res = __dirname + '/../resources';
 
@@ -46,12 +46,6 @@ describe('LiveSet', function() {
 
         it('empty', function () {
             var liveSet = new als.LiveSet("Empty");
-            assert.notEqual(liveSet, null);
-        });
-
-        it('init with JSON files', function () {
-            var voyageJsonParts = als.loadJsonParts(res + "/Voyage-20151217.*.json");
-            var liveSet = new als.LiveSet("Voyage-20151217", voyageJsonParts);
             assert.notEqual(liveSet, null);
         });
 
