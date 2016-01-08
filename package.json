@@ -1,0 +1,48 @@
+{
+  "name": "als-player",
+  "version": "1.0.0",
+  "description": "Lecteur de projet Ableton Live 8",
+  "main": "als2jsons.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "dependencies": {
+    "async": "^1.5.0",
+    "chai": "^3.4.1",
+    "deasync": "^0.1.4",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.15",
+    "karma-jasmine": "^0.3.6",
+    "midi-node": "^0.1.13",
+    "mongodb": "^2.0.49",
+    "msexcel-builder": "^0.0.2",
+    "msexcel-builder-colorfix-intfix": "^0.0.2",
+    "plotly": "^1.0.5",
+    "requirejs": "^2.1.22",
+    "underscore": "^1.8.3",
+    "xlsx": "^0.8.0",
+    "xml2js": "^0.4.15",
+    "yargs": "^3.31.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "D:\\\\Dropbox\\\\Prog\\\\git\\\\als-player.git"
+  },
+  "keywords": [
+    "Ableton",
+    "Live",
+    "als",
+    "music",
+    "midi",
+    "audio",
+    "songs",
+    "measures"
+  ],
+  "author": "bludwarf@gmail.com",
+  "license": "ISC"
+}
