@@ -5,9 +5,11 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/data/db" />
       <excludeFolder url="file://$MODULE_DIR$/data/log" />
-      <excludeFolder url="file://$MODULE_DIR$/maquettes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="jquery-1.11.3" level="application" />
+    <orderEntry type="library" name="underscore" level="application" />
+    <orderEntry type="library" name="angular" level="application" />
   </component>
 </module>
