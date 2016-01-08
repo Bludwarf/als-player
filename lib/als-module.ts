@@ -165,6 +165,7 @@ module als {
         public locators : Array<Locator>; // JSON
 
         private _patterns : Array<Pattern>;
+        private _sections : Array<Section>;
 
         private _file : string;
 
@@ -437,6 +438,25 @@ module als {
          */
         public locatorAt(filter : any) : any {
             return elementAt(this.locators, filter);
+        }
+
+        get sections() : Array<Section> {
+            if (!this._sections) {
+                this._sections = [];
+
+                var last : Pattern = null;
+                var section : Section = null;
+                for (var i = 0; i < this.patterns.length; ++i) {
+                    var pattern : Pattern = this.patterns[i];
+                    if (!section || !last || last.name != pattern.name) {
+                        section = new Section();
+                        this._sections.push(section);
+                    }
+                    section.add(pattern);
+                    last = pattern;
+                }
+            }
+            return this._sections;
         }
 
     }
@@ -880,6 +900,21 @@ module als {
 
             // Interpolation
             return this.secTime + (beatTime - this.beatTime) * this.beatValue;
+        }
+
+    }
+
+    export class Section {
+
+        public patterns : Array<Pattern> = [];
+
+        /**
+         * Ajout d'un pattern à la suite des autres dans cette section. Aucune vérif de doublon.
+         * @param pattern
+         * @returns {number} le nombre de pattern dans cette section suite à l'ajout
+         */
+        public add(pattern : Pattern) : number {
+            return this.patterns.push(pattern);
         }
 
     }

@@ -150,6 +150,23 @@ describe('LiveSet', function() {
         });
     });
 
+    describe('#sections', function () {
+
+        it('should get all sections', function () {
+            var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+            var sections = liveSet.sections;
+            assert.equal(sections.length, 13); // regroupe chaque pattern
+        });
+    });
+
+});
+
+describe('Section', function() {
+    var liveSet = new als.LiveSet("Voyage-20151217", res + "/Voyage-20151217.*.json");
+    var patterns = liveSet.patterns;
+
+
+
 });
 
 describe('Pattern', function() {
