@@ -30,7 +30,7 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 	// TODO : CONFIG vars
 
 	/** latence des traitements en ms */
-	$scope.latency = 50;
+	//$scope.latency = 50;
 
 	var liveSet = new als.LiveSet('Voyage-20151217');
 	liveSet.loadLocalJsonParts();
@@ -54,36 +54,36 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
 
 	$scope.liveSet = liveSet;
   
-  // 25/01/2017
+  // 25/01/2017 : séparation par lignes
   var lines = [
     {
       sections: [
         liveSet.sections[0],
-        liveSet.sections[1],
+        liveSet.sections[1], // Mini Refrain
       ]
     },
     {
       sections: [
         liveSet.sections[2],
-        liveSet.sections[3],
+        liveSet.sections[3], // Refrain
       ]
     },
     {
       sections: [
         liveSet.sections[4],
-        liveSet.sections[5],
+        liveSet.sections[5], // Mini Refrain
       ]
     },
     {
       sections: [
         liveSet.sections[6],
-        liveSet.sections[7],
+        liveSet.sections[7], // Refrain
       ]
     },
     {
       sections: [
         liveSet.sections[8],
-        liveSet.sections[9],
+        liveSet.sections[9], // Mini Refrain
       ]
     },
     {
@@ -95,6 +95,10 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
     }
   ];
   $scope.lines = lines;
+  
+  // Offset pour aligner les sections manuellement (en mesures)
+  liveSet.sections[3].offset = 1;
+  liveSet.sections[9].offset = 2;
   
   liveSet.sections.forEach(function(section) {
     Object.defineProperty(section, "measures", {
@@ -134,7 +138,5 @@ app.controller('ctrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
   });
   console.log("lineOfMaxMeasures(length)", lineOfMaxMeasures, maxMeasuresPerLine);
   $scope.maxMeasuresPerLine = maxMeasuresPerLine;
-  $scope.maxMeasureWidthInVw = 100/maxMeasuresPerLine;
-  console.log("maxMeasureWidth", $scope.maxMeasureWidth);
 
 }]);

@@ -45,7 +45,7 @@
 		<!-- Ligne dans la grille -->
 		<div class="line" ng-repeat="line in lines">
 
-			<div class="section" ng-repeat="section in line.sections" ng-style="{width: section.measures.length/maxMeasuresPerLine*100+'%'}">
+			<div class="section" ng-repeat="section in line.sections" ng-style="{width: section.measures.length/maxMeasuresPerLine*100+'%', left: section.offset/maxMeasuresPerLine*100+'%', position: 'relative'}">
 
 				<div class="section-name-wrapper">
           <div class="section-name truncate">
