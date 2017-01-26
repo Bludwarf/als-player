@@ -43,25 +43,29 @@
 		<h1>{{liveSet.name}}</h1>
 
 		<!-- Ligne dans la grille -->
-		<div>
+		<div class="line" ng-repeat="line in lines">
 
-			<div class="section" ng-repeat="section in liveSet.sections">
+			<div class="section" ng-repeat="section in line.sections" ng-style="{width: section.measures.length/maxMeasuresPerLine*100+'%'}">
 
-				<div style="min-height: 1cm; width: 2cm; float: left; margin: 2mm">
-					{{section.name}}
+				<div class="section-name-wrapper">
+          <div class="section-name truncate">
+            {{section.name}}
+          </div>
 				</div>
 
-				<div class="pattern" ng-repeat="pattern in section.patterns" ng-style="{'border-color': pattern.colorIndex}">
+        <div class="section-patterns">
+          <div class="pattern Color-{{pattern.colorIndex}}" ng-repeat="pattern in section.patterns" ng-style="{'border-color': pattern.colorIndex, width: pattern.measures.length/section.measures.length*100+'%'}">
 
-					<div class="measure Color-{{pattern.colorIndex}}" ng-repeat="measure in pattern.measures">
-						<span class="chord">{{measure.chord}}</span>
-					</div>
+            <div class="measure Color-{{pattern.colorIndex}}" ng-repeat="measure in pattern.measures" ng-style="{width: 100/pattern.measures.length+'%'}">
+              <span class="chord">{{measure.chord}}</span>
+            </div>
 
-				</div>
+          </div>
+        </div><!-- section-patterns -->
 
-			</div>
+			</div><!-- section -->
 
-		</div>
+		</div><!-- line -->
 
 	</body>
 </html>

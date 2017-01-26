@@ -1,11 +1,40 @@
+body {
+    background: #DDDDE8;
+}
+
+.line {
+    margin-bottom: 2mm;
+}
+
+.line:hover {
+    /*background: #EEE;*/
+}
+
+.pattern {
+    overflow: auto; /* The clearfix Hack : http://www.w3schools.com/css/css_float.asp */
+    float: left;
+    box-sizing: border-box; /* http://stackoverflow.com/a/9601431 */
+}
+
 .measure {
-    border: solid 1px white;
+    /* border: solid 1px white; */
+    border-left: solid 1px rgba(0,0,0,0.1); /* = .measure:hover pour éviter les flottements de texte */
+    box-sizing: border-box;
     background: rgba(203, 203, 203, 1);
     float: left;
     min-height: 1cm;
-    min-width: 1cm;
+    /*min-width: 1cm;*/
     font-size: 18pt;
     font-weight: bold;
+    cursor: pointer;
+}
+
+.measure:last-child {
+    border-right: double rgba(0,0,0,1);
+}
+
+.measure:hover {
+    border-left: solid 1px red;
 }
 
 .measure .chord {
@@ -18,13 +47,24 @@
     text-align: center;
 }
 
-.pattern {
-    /*clear: both;*/
-    margin: 2mm 2mm;
-    float: left;
-    border: solid 1px black;
+.section {
+    display: inline-block;
 }
 
-.section {
-    clear: both;
+.section-name-wrapper {
+}
+.section-name {
+    
+}
+
+.section:hover .section-name {
+    font-weight: bold;
+    background: #EEE;
+}
+
+/** https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/ */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
