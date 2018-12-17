@@ -1,0 +1,65 @@
+body {
+    /*background: #DDDDE8;*/
+}
+
+.line {
+    
+}
+
+.line:hover {
+    /*background: #EEE;*/
+}
+
+.pattern {
+    
+}
+
+.measure {
+    
+    cursor: pointer;
+}
+
+.measure:last-child {
+}
+
+.measure:hover {
+}
+
+.measure .chord {
+    
+}
+
+.section {
+    border-left: 1ex solid;
+    padding-left: 1ex;
+    margin-bottom: 3px;
+}
+
+.section:hover {
+    background: #EEE;
+}
+
+.section-name-wrapper {
+}
+.section-name {
+    font-size: 16pt;
+}
+
+.section a {
+    text-decoration: none;
+    color: inherit;
+}
+.section a:hover {
+    text-decoration: underline;
+}
+
+.section:hover .section-name {
+    /*font-weight: bold;*/
+}
+
+/** https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/ */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

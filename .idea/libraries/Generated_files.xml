@@ -11,8 +11,8 @@
       <root url="file://$PROJECT_DIR$/lib/Section.js" />
       <root url="file://$PROJECT_DIR$/lib/types.js" />
       <root url="file://$PROJECT_DIR$/lib/WarpMarker.js" />
-      <root url="file://$PROJECT_DIR$/lib/als-module.js" />
       <root url="file://$PROJECT_DIR$/lib/utils.js" />
+      <root url="file://$PROJECT_DIR$/lib/als-module.js" />
     </CLASSES>
     <SOURCES />
   </library>

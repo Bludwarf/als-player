@@ -1,0 +1,75 @@
+<html ng-app="app">
+	<head>
+		<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+		<!-- utilisé par als-module -->
+		<script src="../../node_modules/underscore/underscore.js"></script>
+
+		<!--<script src="../../public/PathMatcher.js"></script>-->
+
+		<!--<script src="../../public/file-matcher-windows.js"></script>-->
+
+		<!-- lib modifiée à la main pour utilisation client et serveur -->
+		<script src="../../public/commonjs-import.js"></script>
+		<script src="../../public/commonjs-import-als.js"></script>
+		<script src="../../lib/als-module.js"></script>
+
+		<script src="../../public/als-client.js"></script>
+
+		<!-- Données bouchons -->
+		<script src="../../resources/client-local-test/loadLocalJsonParts.js"></script>
+		<script src="../../resources/client-local-test/data/Voyage-20151217.jsonParts.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.1/angular.min.js"></script>
+		<script src="app.js"></script>
+
+		<!-- Trop complexe avec Angular -->
+		<!--<script data-main="../../public/scripts/main" src="../../public/scripts/require.js"></script>-->
+
+
+		<!--<link rel="stylesheet" type="text/css" href="../../public/ableton-live.css" />-->
+		<link rel="stylesheet" type="text/css" href="list.css" />
+		<link rel="stylesheet" type="text/css" href="../../public/ableton-live-colors.css" />
+
+		<style>
+			#audio {
+				width: 800px;
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	<body ng-controller="ctrl">
+    
+        
+
+		<h1>{{liveSet.name}}</h1>
+
+		<!-- Ligne dans la grille -->
+		<div class="line" ng-repeat="line in lines">
+
+			<div class="section BorderColor-{{section.patterns[0].colorIndex}}" ng-repeat="section in line.sections">
+
+				<div class="section-name-wrapper">
+                  <div class="section-name truncate">
+                    <a href="#">{{section.name}}</a>
+                  </div>
+				</div>
+
+        <div class="section-patterns">
+          <div class="pattern Color-{{pattern.colorIndex}}" ng-repeat="pattern in section.patterns" ng-style="{'border-color': pattern.colorIndex}">
+
+            <!--
+            <div class="measure Color-{{pattern.colorIndex}}" ng-repeat="measure in pattern.measures">
+              <span class="chord">mesure : {{measure.chord}}</span>
+            </div>
+            -->
+
+          </div>
+        </div><!-- section-patterns -->
+
+			</div><!-- section -->
+
+		</div><!-- line -->
+
+	</body>
+</html>
